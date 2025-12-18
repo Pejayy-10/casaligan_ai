@@ -270,16 +270,29 @@ def _format_summary(pref: Dict[str, Any]) -> str:
         bits.append(f"budget ≤ {pref['budget']}")
     return ", ".join(bits)
 
-def ask_missing(pref: Dict[str, Any]) -> Optional[str]:
-    # Instead of a rigid template, give a short natural nudge
-    has_work_info = bool(pref["skills"]) or bool(pref["date_start"]) or bool(pref["city"]) or (pref["budget"] is not None)
-    if not has_work_info:
-        return _pick([
-            "Got you 😊 What do you need help with most—cleaning, cooking, baby care, laundry, etc.?",
-            "Sure! What’s the main task you need? (cleaning / cooking / baby care / laundry)",
-            "Okay—tell me the top task you need, and if you have a date or location, add it too."
-        ]) + "\n\nTip: you can type like `cleaning near Tetuan available on 2026-01-12 budget 650`."
+def ask_missing(pref: Dict[str, Any], last_user_msg: str = "") -> Optional[str]:
+    t = (last_user_msg or "").lower().strip()
+
+    # smalltalk handling inside recommend flow (so it doesn't feel broken)
+    if t in ["hi", "hello", "hey", "good morning", "good evening", "how are you"]:
+        if "how are you" in t:
+            return "I’m doing good—thanks for asking 😊 What do you need help with today: cleaning, cooking, baby care, or laundry?"
+        return "Hi! 😊 What’s the main task you need—cleaning, cooking, baby care, or laundry?"
+
+    has_any = bool(pref["skills"]) or bool(pref["city"]) or bool(pref["date_start"]) or (pref["budget"] is not None)
+
+    if not has_any:
+        return "Okay 😊 What’s the top task you need help with—cleaning, cooking, baby care, or laundry?"
+
+    # If they gave skills but nothing else, ask one best follow-up
+    if pref["skills"] and not pref["city"] and not pref["date_start"]:
+        return "Got it. Where should the housekeeper be located (e.g., Tetuan / Guiwan), and do you have a date in mind?"
+
+    if pref["skills"] and pref["city"] and not pref["date_start"]:
+        return "Nice—do you need them for a specific date or date range?"
+
     return None
+
 
 def recommend(pref: Dict[str, Any], top_k=10) -> List[Dict[str, Any]]:
     rows = []
