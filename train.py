@@ -1,8 +1,9 @@
 import os
+import json
 import random
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from datetime import date, timedelta
-from typing import List, Tuple, Dict, Any
+from typing import List, Dict, Tuple, Optional
 
 import numpy as np
 import pandas as pd
@@ -10,363 +11,375 @@ from joblib import dump
 from dateutil.parser import parse as dt_parse
 
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
-from sklearn.linear_model import LogisticRegression
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (
+    accuracy_score, precision_recall_fscore_support,
+    classification_report, confusion_matrix, roc_auc_score
+)
 
+ART = "artifacts"
+os.makedirs(ART, exist_ok=True)
 
-# ----------------------------
-# Domain setup
-# ----------------------------
+SEED = 42
+random.seed(SEED)
+np.random.seed(SEED)
+
+# ---- Reference-grounded taxonomy (skills/tasks categories) ----
+# (Grounding references for your documentation: TESDA Housekeeping NC II, ILO Domestic Work, O*NET tasks, IRR RA10361)
 SKILLS = [
-    "cleaning", "laundry", "ironing", "cooking", "baby care", "elder care",
-    "pet care", "gardening", "house organization", "deep cleaning"
+    "cleaning", "deep cleaning", "laundry", "ironing", "cooking",
+    "baby care", "elder care", "pet care", "gardening",
+    "house organization"
 ]
-
+LANGUAGES = ["english", "filipino", "chavacano", "bisaya"]
 CITIES = [
     "Zamboanga City", "Tetuan", "Guiwan", "Putik", "Canelar",
     "Divisoria", "Ayala", "Sta. Maria", "Sangali"
 ]
-
-LANGUAGES = ["english", "filipino", "chavacano", "bisaya"]
 GENDERS = ["female", "male"]
-PACKAGE_TYPES = ["hourly", "daily", "weekly"]
 
+# ---- Intent training samples ----
+# Keep this small but diverse; add more examples anytime.
+INTENT_CLASSES = ["RECOMMEND", "SUPPORT", "JOB_POST", "SMALLTALK", "OFF_TOPIC"]
 
-def weighted_choice(items, weights):
-    r = random.random() * sum(weights)
-    upto = 0
-    for item, w in zip(items, weights):
-        upto += w
-        if upto >= r:
-            return item
-    return items[-1]
+def build_intent_samples() -> pd.DataFrame:
+    samples = []
 
+    # RECOMMEND
+    rec = [
+        "recommend a housekeeper",
+        "find me a helper for cleaning",
+        "looking for a female housekeeper",
+        "need baby care from jan 12 to jan 14",
+        "chavacano housekeeper near tetuan",
+        "hire a yaya who can cook",
+        "available on 2026-01-12 cleaning budget 650",
+        "suggest someone for laundry and ironing",
+        "i want a kasambahay near guiwan",
+        "show me housekeepers that are available tomorrow",
+    ]
+    for t in rec:
+        samples.append((t, "RECOMMEND"))
 
-@dataclass
-class Housekeeper:
-    housekeeper_id: str
-    name: str
-    age: int
-    gender: str
-    city: str
-    skills: List[str]
-    experience_years: int
-    languages: List[str]
-    package_type: str
-    price: int
-    blocked_ranges: List[Tuple[str, str]]
+    # SUPPORT
+    sup = [
+        "i can't login",
+        "password not working",
+        "how to reset my password",
+        "payment failed",
+        "my screen is stuck",
+        "the app is not loading",
+        "why can't i open the profile",
+        "i got an error message",
+        "how do i contact support",
+    ]
+    for t in sup:
+        samples.append((t, "SUPPORT"))
 
+    # JOB_POST
+    jp = [
+        "how do i post a job",
+        "help me create a job post",
+        "i want to post housekeeping work",
+        "how can housekeepers apply to my post",
+        "how to set my job schedule and budget",
+    ]
+    for t in jp:
+        samples.append((t, "JOB_POST"))
 
-def rand_name():
-    first = ["Aira", "Joan", "Mark", "Riza", "Kyla", "Nina", "Alex", "Carlo", "Mae", "Ruth", "Jessa", "Liza"]
-    last = ["Santos", "Reyes", "Garcia", "Dela Cruz", "Flores", "Torres", "Villanueva", "Gonzales"]
-    return f"{random.choice(first)} {random.choice(last)}"
+    # SMALLTALK
+    st = [
+        "hello",
+        "hi casaligan",
+        "good morning",
+        "who are you",
+        "what can you do",
+        "thanks",
+        "thank you so much",
+        "nice",
+    ]
+    for t in st:
+        samples.append((t, "SMALLTALK"))
 
+    # OFF_TOPIC
+    ot = [
+        "what is the capital of france",
+        "solve this math problem",
+        "write me a poem",
+        "who is the president of the philippines",
+        "give me minecraft mod suggestions",
+        "explain calculus",
+    ]
+    for t in ot:
+        samples.append((t, "OFF_TOPIC"))
 
-def random_blocked_ranges(start_day: date, days_span=150, max_ranges=4):
+    df = pd.DataFrame(samples, columns=["text", "label"])
+    df = df.sample(frac=1.0, random_state=SEED).reset_index(drop=True)
+    return df
+
+# ---- Availability helpers ----
+def random_blocked_ranges() -> str:
+    # 0 to 3 blocked ranges
+    k = random.randint(0, 3)
     ranges = []
-    for _ in range(random.randint(0, max_ranges)):
-        s = start_day + timedelta(days=random.randint(0, days_span - 1))
-        e = s + timedelta(days=random.randint(1, 4))
-        ranges.append((s.isoformat(), e.isoformat()))
-    return ranges
+    base = date.today()
+    for _ in range(k):
+        start = base + timedelta(days=random.randint(1, 60))
+        end = start + timedelta(days=random.randint(0, 5))
+        ranges.append(f"{start.isoformat()}:{end.isoformat()}")
+    return "|".join(ranges)
 
+def parse_blocked(blocked_str: str) -> List[Tuple[date, date]]:
+    if not isinstance(blocked_str, str) or blocked_str.strip() == "":
+        return []
+    out = []
+    for part in blocked_str.split("|"):
+        if ":" not in part:
+            continue
+        s, e = part.split(":", 1)
+        out.append((dt_parse(s).date(), dt_parse(e).date()))
+    return out
 
-def generate_housekeepers(n=300, seed=42):
-    random.seed(seed)
-    np.random.seed(seed)
-    today = date.today()
+def overlap(a1: date, a2: date, b1: date, b2: date) -> bool:
+    return not (a2 < b1 or b2 < a1)
 
-    keepers = []
-    for i in range(n):
-        hid = f"HK-{i+1:04d}"
-        age = random.randint(18, 55)
-        gender = random.choice(GENDERS)
-        city = random.choice(CITIES)
-
-        skills = random.sample(SKILLS, k=random.randint(2, 5))
-        exp = max(0, int(np.random.normal(loc=3.5, scale=2.0)))
-
-        # Weighted for Zambo context: chavacano + filipino often
-        lang1 = weighted_choice(LANGUAGES, weights=[0.20, 0.35, 0.35, 0.10])
-        lang2 = weighted_choice(LANGUAGES, weights=[0.25, 0.35, 0.25, 0.15])
-        languages = sorted(list(set([lang1, lang2])))[:2]
-
-        package_type = random.choice(PACKAGE_TYPES)
-        base = {"hourly": 90, "daily": 550, "weekly": 2800}[package_type]
-        price = int(max(base * 0.7, base + np.random.normal(0, base * 0.18)))
-
-        blocked = random_blocked_ranges(today, 150, 4)
-
-        keepers.append(Housekeeper(
-            housekeeper_id=hid,
-            name=rand_name(),
-            age=age,
-            gender=gender,
-            city=city,
-            skills=skills,
-            experience_years=exp,
-            languages=languages,
-            package_type=package_type,
-            price=price,
-            blocked_ranges=blocked
-        ))
-    return keepers
-
-
-def ranges_overlap(a_start: date, a_end: date, b_start: date, b_end: date):
-    return not (a_end < b_start or b_end < a_start)
-
-
-def is_available(blocked_ranges: List[Tuple[str, str]], req_start: date, req_end: date) -> bool:
-    for s, e in blocked_ranges:
-        bs = dt_parse(s).date()
-        be = dt_parse(e).date()
-        if ranges_overlap(req_start, req_end, bs, be):
+def is_available(blocked: List[Tuple[date, date]], rs: date, re_: date) -> bool:
+    for bs, be in blocked:
+        if overlap(rs, re_, bs, be):
             return False
     return True
 
+# ---- Reco feature engineering (must match app.py) ----
+RECO_FEATURES = [
+    "pref_min_age", "pref_budget", "pref_skill_count",
+    "hk_age", "hk_experience_years", "hk_price",
+    "skill_overlap", "age_ok", "gender_ok", "city_match", "budget_ok",
+    "lang_overlap", "language_ok",
+    "availability_ok", "overlap_days"
+]
 
-def make_query_text(pref: Dict[str, Any]) -> str:
-    parts = ["Find me a housekeeper"]
-    if pref.get("gender"):
-        parts.append(pref["gender"])
-    if pref.get("min_age"):
-        parts.append(f"above {pref['min_age']}")
-    if pref.get("language"):
-        parts.append(pref["language"])
-    if pref.get("city"):
-        parts.append(f"near {pref['city']}")
-    if pref.get("skills"):
-        parts.append("skills: " + ", ".join(pref["skills"]))
-    if pref.get("budget"):
-        parts.append(f"budget {pref['budget']}")
-    if pref.get("date_start"):
-        if pref.get("date_end") and pref["date_end"] != pref["date_start"]:
-            parts.append(f"from {pref['date_start']} to {pref['date_end']}")
-        else:
-            parts.append(f"on {pref['date_start']}")
-    return " ".join(parts)
+def build_features(pref: Dict[str, any], hk_row: pd.Series) -> Dict[str, float]:
+    hk_skills = set(str(hk_row["skills"]).split("|"))
+    hk_langs = set(str(hk_row["languages"]).split("|"))
 
+    skill_overlap = len(set(pref["skills"]) & hk_skills) if pref["skills"] else 0
 
-def generate_training_pairs(keepers: List[Housekeeper], n_queries=1400, pairs_per_query=30, seed=42) -> pd.DataFrame:
-    random.seed(seed)
-    np.random.seed(seed)
-    today = date.today()
+    age_ok = 1 if (pref["min_age"] is None or int(hk_row["age"]) >= int(pref["min_age"])) else 0
+    gender_ok = 1 if (pref["gender"] is None or str(hk_row["gender"]).lower() == pref["gender"]) else 0
+    city_match = 1 if (pref["city"] is None or str(hk_row["city"]) == pref["city"]) else 0
 
-    rows = []
-    for _ in range(n_queries):
-        pref = {
-            "gender": random.choice([None, "female", "male"]),
-            "min_age": random.choice([None, 20, 22, 25, 30]),
-            "language": random.choice([None, "english", "filipino", "chavacano", "bisaya"]),
-            "city": random.choice([None] + CITIES),
-            "skills": random.sample(SKILLS, k=random.randint(1, 3)),
-            "budget": random.choice([None, 120, 150, 200, 550, 650, 2800, 3200]),
+    budget_ok = 1
+    if pref["budget"] is not None:
+        budget_ok = 1 if int(hk_row["price"]) <= int(pref["budget"]) else 0
+
+    lang_overlap = 0
+    language_ok = 1
+    if pref["language"] is not None:
+        lang_overlap = 1 if pref["language"] in hk_langs else 0
+        language_ok = lang_overlap
+
+    availability_ok = 1
+    overlap_days = 0
+    if pref["date_start"]:
+        rs = dt_parse(pref["date_start"]).date()
+        re_ = dt_parse(pref["date_end"]).date() if pref["date_end"] else rs
+        blocked = parse_blocked(str(hk_row["blocked_ranges"]))
+        availability_ok = 1 if is_available(blocked, rs, re_) else 0
+        if availability_ok == 0:
+            overlap_days = 2
+
+    return {
+        "pref_min_age": float(pref["min_age"] or 0),
+        "pref_budget": float(pref["budget"] or 0),
+        "pref_skill_count": float(len(pref["skills"])),
+
+        "hk_age": float(hk_row["age"]),
+        "hk_experience_years": float(hk_row["experience_years"]),
+        "hk_price": float(hk_row["price"]),
+
+        "skill_overlap": float(skill_overlap),
+        "age_ok": float(age_ok),
+        "gender_ok": float(gender_ok),
+        "city_match": float(city_match),
+        "budget_ok": float(budget_ok),
+
+        "lang_overlap": float(lang_overlap),
+        "language_ok": float(language_ok),
+
+        "availability_ok": float(availability_ok),
+        "overlap_days": float(overlap_days),
+    }
+
+def random_pref() -> Dict[str, any]:
+    # Generate realistic-ish user preferences
+    skills = random.sample(SKILLS, k=random.randint(1, 3))
+    language = random.choice(LANGUAGES + [None, None])  # sometimes none
+    city = random.choice(CITIES + [None, None])
+    gender = random.choice(GENDERS + [None, None, None])
+    min_age = random.choice([None, None, 18, 20, 22, 25])
+    budget = random.choice([None, None, 200, 350, 500, 650, 800])
+
+    # sometimes ask for date range
+    if random.random() < 0.55:
+        start = date.today() + timedelta(days=random.randint(1, 30))
+        end = start + timedelta(days=random.randint(0, 5))
+        ds, de = start.isoformat(), end.isoformat()
+    else:
+        ds, de = None, None
+
+    return {
+        "skills": skills,
+        "language": language,
+        "city": city,
+        "gender": gender,
+        "min_age": min_age,
+        "budget": budget,
+        "date_start": ds,
+        "date_end": de,
+    }
+
+def label_match(pref: Dict[str, any], hk: pd.Series) -> int:
+    feats = build_features(pref, hk)
+    # Label rule: must overlap skills >= 1
+    if feats["skill_overlap"] < 1:
+        return 0
+    # If user asked language, require it
+    if pref["language"] is not None and feats["language_ok"] == 0:
+        return 0
+    # If user asked dates, require availability
+    if pref["date_start"] is not None and feats["availability_ok"] == 0:
+        return 0
+    # If budget asked, require budget_ok
+    if pref["budget"] is not None and feats["budget_ok"] == 0:
+        return 0
+    # Optional constraints: gender, age, city (soft)
+    # We treat them as helpful but not strict in labels (to avoid too-hard labels).
+    return 1
+
+def train_intent_model() -> Dict[str, any]:
+    df = build_intent_samples()
+    X_train, X_test, y_train, y_test = train_test_split(
+        df["text"], df["label"], test_size=0.25, random_state=SEED, stratify=df["label"]
+    )
+
+    vec = TfidfVectorizer(ngram_range=(1, 2), min_df=1)
+    Xtr = vec.fit_transform(X_train)
+    Xte = vec.transform(X_test)
+
+    clf = LogisticRegression(max_iter=2000)
+    clf.fit(Xtr, y_train)
+
+    pred = clf.predict(Xte)
+
+    acc = accuracy_score(y_test, pred)
+    pr, rc, f1, _ = precision_recall_fscore_support(y_test, pred, average="weighted", zero_division=0)
+    cm = confusion_matrix(y_test, pred, labels=INTENT_CLASSES).tolist()
+
+    print("\n==== INTENT MODEL EVALUATION ====")
+    print("Accuracy:", round(acc, 4))
+    print("Precision (weighted):", round(pr, 4))
+    print("Recall (weighted):", round(rc, 4))
+    print("F1 (weighted):", round(f1, 4))
+    print("\nClassification Report:\n", classification_report(y_test, pred, zero_division=0))
+    print("Confusion Matrix (rows=true, cols=pred) labels=", INTENT_CLASSES)
+    print(np.array(cm))
+
+    dump(vec, os.path.join(ART, "intent_vectorizer.joblib"))
+    dump(clf, os.path.join(ART, "intent_model.joblib"))
+
+    return {
+        "intent": {
+            "accuracy": float(acc),
+            "precision_weighted": float(pr),
+            "recall_weighted": float(rc),
+            "f1_weighted": float(f1),
+            "labels": INTENT_CLASSES,
+            "confusion_matrix": cm
         }
+    }
 
-        if random.random() < 0.75:
-            start = today + timedelta(days=random.randint(0, 70))
-            end = start + timedelta(days=random.randint(0, 3))
-            pref["date_start"] = start.isoformat()
-            pref["date_end"] = end.isoformat()
-        else:
-            pref["date_start"] = None
-            pref["date_end"] = None
-
-        query_text = make_query_text(pref)
-
-        candidates = random.sample(keepers, k=min(pairs_per_query, len(keepers)))
-        for hk in candidates:
-            skill_overlap = len(set(pref["skills"]) & set(hk.skills))
-
-            age_ok = 1 if (pref["min_age"] is None or hk.age >= pref["min_age"]) else 0
-            gender_ok = 1 if (pref["gender"] is None or hk.gender == pref["gender"]) else 0
-            city_match = 1 if (pref["city"] is None or hk.city == pref["city"]) else 0
-
-            budget_ok = 1
-            if pref["budget"] is not None:
-                budget_ok = 1 if hk.price <= pref["budget"] else 0
-
-            lang_overlap = 0
-            language_ok = 1
-            if pref["language"] is not None:
-                lang_overlap = 1 if pref["language"] in [x.lower() for x in hk.languages] else 0
-                language_ok = lang_overlap
-
-            availability_ok = 1
-            overlap_days = 0
-            if pref["date_start"]:
-                rs = dt_parse(pref["date_start"]).date()
-                re_ = dt_parse(pref["date_end"]).date()
-                availability_ok = 1 if is_available(hk.blocked_ranges, rs, re_) else 0
-                if availability_ok == 0:
-                    overlap_days = random.randint(1, 3)
-
-            label = 1 if (
-                skill_overlap >= 1
-                and age_ok == 1
-                and gender_ok == 1
-                and language_ok == 1
-                and availability_ok == 1
-                and budget_ok == 1
-            ) else 0
-
-            if random.random() < 0.03:
-                label = 1 - label
-
-            rows.append({
-                "query_text": query_text,
-
-                "pref_min_age": float(pref["min_age"] or 0),
-                "pref_budget": float(pref["budget"] or 0),
-                "pref_skill_count": float(len(pref["skills"])),
-
-                "hk_age": float(hk.age),
-                "hk_experience_years": float(hk.experience_years),
-                "hk_price": float(hk.price),
-
-                "skill_overlap": float(skill_overlap),
-                "age_ok": float(age_ok),
-                "gender_ok": float(gender_ok),
-                "city_match": float(city_match),
-                "budget_ok": float(budget_ok),
-
-                "lang_overlap": float(lang_overlap),
-                "language_ok": float(language_ok),
-
-                "availability_ok": float(availability_ok),
-                "overlap_days": float(overlap_days),
-
-                "label_match": int(label),
-            })
-
-    return pd.DataFrame(rows)
-
-
-def generate_intent_dataset(seed=42) -> pd.DataFrame:
-    random.seed(seed)
-    today = date.today()
-
-    def iso(d): return d.isoformat()
-
-    recommend = [
-        "can you suggest me a housekeeper that is female and speaks chavacano",
-        "can you find me a maid who speaks bisaya",
-        "recommend a helper near tetuan budget 650",
-        "looking for a female housekeeper 22+ baby care",
-        "need cooking and cleaning available on " + iso(today + timedelta(days=5)),
-        "find me a housekeeper who can do laundry under 200",
-        "i want to hire a yaya who speaks chavacano",
-        "match me with a housekeeper for deep cleaning",
-    ]
-
-    job_post = [
-        "how do i post a job?",
-        "help me create a job posting",
-        "what should i write in my job post?",
-        "how do i set my budget in job post?",
-    ]
-
-    support = [
-        "i can't login",
-        "how do i reset my password",
-        "my payment failed",
-        "how do refunds work",
-        "where can i see my applications",
-        "my account got locked",
-    ]
-
-    smalltalk = [
-        "hello",
-        "good morning",
-        "thanks",
-        "who are you?",
-        "what can you do?",
-        "nice!",
-    ]
-
+def train_reco_model(hk_df: pd.DataFrame) -> Dict[str, any]:
+    # Generate training pairs (pref, hk) and labels
     rows = []
-    for _ in range(520):
-        rows.append((random.choice(recommend), "RECOMMEND"))
-    for _ in range(220):
-        rows.append((random.choice(job_post), "JOB_POST"))
-    for _ in range(260):
-        rows.append((random.choice(support), "SUPPORT"))
-    for _ in range(260):
-        rows.append((random.choice(smalltalk), "SMALLTALK"))
+    for _ in range(1400):  # increase if you want
+        pref = random_pref()
+        hk = hk_df.sample(1, random_state=random.randint(1, 999999)).iloc[0]
+        y = label_match(pref, hk)
+        feats = build_features(pref, hk)
+        rows.append((feats, y))
 
-    df = pd.DataFrame(rows, columns=["text", "intent"])
-    return df.sample(frac=1.0, random_state=seed).reset_index(drop=True)
+    feat_df = pd.DataFrame([r[0] for r in rows])
+    y = np.array([r[1] for r in rows], dtype=int)
 
+    # Balance a bit (optional)
+    # Keep all positives, sample negatives
+    pos_idx = np.where(y == 1)[0]
+    neg_idx = np.where(y == 0)[0]
+    if len(pos_idx) > 0:
+        keep_neg = np.random.choice(neg_idx, size=min(len(neg_idx), len(pos_idx) * 2), replace=False)
+        keep_idx = np.concatenate([pos_idx, keep_neg])
+        feat_df = feat_df.iloc[keep_idx].reset_index(drop=True)
+        y = y[keep_idx]
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        feat_df[RECO_FEATURES], y, test_size=0.25, random_state=SEED, stratify=y
+    )
+
+    model = LogisticRegression(max_iter=2000)
+    model.fit(X_train, y_train)
+
+    proba = model.predict_proba(X_test)[:, 1]
+    pred = (proba >= 0.5).astype(int)
+
+    acc = accuracy_score(y_test, pred)
+    pr, rc, f1, _ = precision_recall_fscore_support(y_test, pred, average="binary", zero_division=0)
+    auc = roc_auc_score(y_test, proba) if len(np.unique(y_test)) > 1 else float("nan")
+
+    print("\n==== RECOMMENDATION MODEL EVALUATION ====")
+    print("Accuracy:", round(acc, 4))
+    print("Precision:", round(pr, 4))
+    print("Recall:", round(rc, 4))
+    print("F1:", round(f1, 4))
+    print("ROC-AUC:", round(auc, 4) if not np.isnan(auc) else "N/A")
+
+    dump(model, os.path.join(ART, "reco_model.joblib"))
+    dump(RECO_FEATURES, os.path.join(ART, "reco_features.joblib"))
+
+    return {
+        "recommender": {
+            "accuracy": float(acc),
+            "precision": float(pr),
+            "recall": float(rc),
+            "f1": float(f1),
+            "roc_auc": float(auc) if not np.isnan(auc) else None,
+            "n_samples": int(len(y))
+        }
+    }
 
 def main():
-    os.makedirs("artifacts", exist_ok=True)
+    hk_path = os.path.join(ART, "housekeepers.csv")
+    if not os.path.exists(hk_path):
+        raise FileNotFoundError(
+            f"Missing {hk_path}. Put your housekeepers.csv inside artifacts/ first."
+        )
 
-    keepers = generate_housekeepers(n=300, seed=42)
+    hk = pd.read_csv(hk_path)
 
-    # Save housekeepers
-    hk_rows = []
-    for hk in keepers:
-        d = asdict(hk)
-        d["skills"] = "|".join(hk.skills)
-        d["languages"] = "|".join([x.lower() for x in hk.languages])
-        d["blocked_ranges"] = "|".join([f"{s}:{e}" for s, e in hk.blocked_ranges])
-        hk_rows.append(d)
+    # Ensure blocked_ranges exists (if not, create)
+    if "blocked_ranges" not in hk.columns:
+        hk["blocked_ranges"] = [random_blocked_ranges() for _ in range(len(hk))]
 
-    hk_df = pd.DataFrame(hk_rows)
-    hk_df.to_csv("artifacts/housekeepers.csv", index=False)
+    metrics = {}
+    metrics.update(train_intent_model())
+    metrics.update(train_reco_model(hk))
 
-    # Recommendation training
-    pairs = generate_training_pairs(keepers, n_queries=1400, pairs_per_query=30, seed=42)
-    pairs.to_csv("artifacts/training_pairs.csv", index=False)
+    out = os.path.join(ART, "metrics.json")
+    with open(out, "w", encoding="utf-8") as f:
+        json.dump(metrics, f, indent=2)
 
-    feature_cols = [
-        "pref_min_age", "pref_budget", "pref_skill_count",
-        "hk_age", "hk_experience_years", "hk_price",
-        "skill_overlap", "age_ok", "gender_ok", "city_match", "budget_ok",
-        "lang_overlap", "language_ok",
-        "availability_ok", "overlap_days",
-    ]
-
-    X = pairs[feature_cols].astype(float)
-    y = pairs["label_match"].astype(int)
-
-    Xtr, Xte, ytr, yte = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
-
-    reco = LogisticRegression(max_iter=300)
-    reco.fit(Xtr, ytr)
-
-    print("\n=== Recommender model report ===")
-    print(classification_report(yte, reco.predict(Xte), digits=3))
-
-    dump(reco, "artifacts/reco_model.joblib")
-    dump(feature_cols, "artifacts/reco_features.joblib")
-
-    # Intent training (multiclass)
-    intent_df = generate_intent_dataset(seed=42)
-    X_text = intent_df["text"].values
-    y_int = intent_df["intent"].values
-
-    Xtr_t, Xte_t, ytr_t, yte_t = train_test_split(X_text, y_int, test_size=0.2, random_state=42, stratify=y_int)
-
-    vec = TfidfVectorizer(ngram_range=(1, 2), min_df=2)
-    Xtr_vec = vec.fit_transform(Xtr_t)
-    Xte_vec = vec.transform(Xte_t)
-
-    intent_model = LogisticRegression(max_iter=400)
-    intent_model.fit(Xtr_vec, ytr_t)
-
-    print("\n=== Intent model report ===")
-    print(classification_report(yte_t, intent_model.predict(Xte_vec), digits=3))
-
-    dump(vec, "artifacts/intent_vectorizer.joblib")
-    dump(intent_model, "artifacts/intent_model.joblib")
-
-    print("\nSaved artifacts to ./artifacts")
-    print("Next: uvicorn app:app --reload")
-
+    print("\nSaved metrics to:", out)
+    print("Saved artifacts to:", ART)
 
 if __name__ == "__main__":
     main()

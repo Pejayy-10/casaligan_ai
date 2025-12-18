@@ -1,9 +1,9 @@
 import os
 import re
+import random
 from typing import Dict, Any, List, Tuple, Optional
 from datetime import date, timedelta
 
-import numpy as np
 import pandas as pd
 from joblib import load
 from dateutil.parser import parse as dt_parse
@@ -15,6 +15,7 @@ from pydantic import BaseModel
 
 
 ART = "artifacts"
+random.seed(42)
 
 HK = pd.read_csv(os.path.join(ART, "housekeepers.csv"))
 
@@ -24,7 +25,7 @@ RECO_FEATURES: List[str] = load(os.path.join(ART, "reco_features.joblib"))
 VEC = load(os.path.join(ART, "intent_vectorizer.joblib"))
 INTENT_MODEL = load(os.path.join(ART, "intent_model.joblib"))
 
-
+# Reference-grounded taxonomy (skills/categories). (Cite TESDA/ILO/O*NET in documentation)
 SKILLS = [
     "cleaning", "laundry", "ironing", "cooking", "baby care", "elder care",
     "pet care", "gardening", "house organization", "deep cleaning"
@@ -36,6 +37,12 @@ CITIES = [
 LANGUAGES = ["english", "filipino", "chavacano", "bisaya"]
 GENDERS = ["female", "male"]
 
+DOMAIN_KEYWORDS = [
+    "housekeeper", "kasambahay", "helper", "maid", "yaya",
+    "recommend", "suggest", "find", "hire", "match",
+    "cleaning", "laundry", "ironing", "cooking", "baby", "elder",
+    "available", "schedule", "budget", "near", "location", "package"
+]
 
 # ---------- Availability helpers ----------
 def parse_blocked(blocked_str: str) -> List[Tuple[date, date]]:
@@ -49,10 +56,8 @@ def parse_blocked(blocked_str: str) -> List[Tuple[date, date]]:
         out.append((dt_parse(s).date(), dt_parse(e).date()))
     return out
 
-
 def overlap(a1: date, a2: date, b1: date, b2: date) -> bool:
     return not (a2 < b1 or b2 < a1)
-
 
 def is_available(blocked: List[Tuple[date, date]], rs: date, re_: date) -> bool:
     for bs, be in blocked:
@@ -60,21 +65,24 @@ def is_available(blocked: List[Tuple[date, date]], rs: date, re_: date) -> bool:
             return False
     return True
 
-
-# ---------- Intent detection with rule override ----------
+# ---------- Intent detection ----------
 def detect_intent(text: str) -> str:
-    t = text.lower()
+    t = text.lower().strip()
 
-    recommend_keywords = [
-        "housekeeper", "kasambahay", "helper", "maid", "yaya",
-        "suggest", "recommend", "find", "looking for", "hire", "match"
-    ]
-    if any(k in t for k in recommend_keywords):
+    # Strong rule override for recommendation intent
+    if any(k in t for k in ["recommend", "suggest", "find", "hire", "housekeeper", "kasambahay", "maid", "yaya"]):
         return "RECOMMEND"
 
-    X = VEC.transform([text])
-    return INTENT_MODEL.predict(X)[0]
+    # If user message looks clearly out-of-domain, classify as OFF_TOPIC quickly
+    if not any(k in t for k in DOMAIN_KEYWORDS) and len(t.split()) >= 4:
+        # Let ML model still decide, but bias towards OFF_TOPIC if it predicts weirdly
+        X = VEC.transform([text])
+        pred = INTENT_MODEL.predict(X)[0]
+        return pred if pred in ["SUPPORT", "SMALLTALK", "JOB_POST"] else "OFF_TOPIC"
 
+    X = VEC.transform([text])
+    pred = INTENT_MODEL.predict(X)[0]
+    return pred
 
 # ---------- Slot extraction ----------
 def _find_city(t: str) -> Optional[str]:
@@ -82,7 +90,6 @@ def _find_city(t: str) -> Optional[str]:
         if c.lower() in t:
             return c
     return None
-
 
 def _find_skills(t: str) -> List[str]:
     found = []
@@ -93,7 +100,6 @@ def _find_skills(t: str) -> List[str]:
         found.append("baby care")
     return list(dict.fromkeys(found))
 
-
 def _find_language(t: str) -> Optional[str]:
     if "chabacano" in t or "zamboangueño" in t:
         return "chavacano"
@@ -102,13 +108,11 @@ def _find_language(t: str) -> Optional[str]:
             return lang
     return None
 
-
 def _find_gender(t: str) -> Optional[str]:
     for g in GENDERS:
         if re.search(rf"\b{g}\b", t):
             return g
     return None
-
 
 def _find_min_age(t: str) -> Optional[int]:
     m = re.search(r"\b(above|over|at least|min)\s+(\d{2})\b", t)
@@ -119,13 +123,11 @@ def _find_min_age(t: str) -> Optional[int]:
         return int(m2.group(1))
     return None
 
-
 def _find_budget(t: str) -> Optional[int]:
     m = re.search(r"\b(budget|max|under|below)\s+(\d{2,5})\b", t)
     if m:
         return int(m.group(2))
     return None
-
 
 def _parse_date_any(s: str) -> Optional[date]:
     try:
@@ -133,7 +135,6 @@ def _parse_date_any(s: str) -> Optional[date]:
         return d
     except Exception:
         return None
-
 
 def _find_date_range(t: str) -> Tuple[Optional[str], Optional[str]]:
     m = re.search(r"\bfrom\s+(\d{4}-\d{2}-\d{2})\s+to\s+(\d{4}-\d{2}-\d{2})\b", t)
@@ -168,7 +169,6 @@ def _find_date_range(t: str) -> Tuple[Optional[str], Optional[str]]:
 
     return None, None
 
-
 def extract_preferences(text: str) -> Dict[str, Any]:
     t = text.lower().strip()
     ds, de = _find_date_range(t)
@@ -184,7 +184,6 @@ def extract_preferences(text: str) -> Dict[str, Any]:
         "date_end": de,
     }
 
-
 def merge_preferences(base: Dict[str, Any], newp: Dict[str, Any]) -> Dict[str, Any]:
     merged = dict(base)
 
@@ -198,8 +197,7 @@ def merge_preferences(base: Dict[str, Any], newp: Dict[str, Any]) -> Dict[str, A
 
     return merged
 
-
-# ---------- Recommender feature building ----------
+# ---------- Reco features ----------
 def build_features(pref: Dict[str, Any], hk_row: pd.Series) -> Dict[str, float]:
     hk_skills = set(str(hk_row["skills"]).split("|"))
     hk_langs = set(str(hk_row["languages"]).split("|"))
@@ -252,26 +250,43 @@ def build_features(pref: Dict[str, Any], hk_row: pd.Series) -> Dict[str, float]:
         "overlap_days": float(overlap_days),
     }
 
+def _pick(lines: List[str]) -> str:
+    return random.choice(lines)
+
+def _format_summary(pref: Dict[str, Any]) -> str:
+    bits = []
+    if pref.get("skills"):
+        bits.append("skills: " + ", ".join(pref["skills"]))
+    if pref.get("city"):
+        bits.append("near " + pref["city"])
+    if pref.get("language"):
+        bits.append("language: " + pref["language"])
+    if pref.get("date_start"):
+        if pref.get("date_end") and pref["date_end"] != pref["date_start"]:
+            bits.append(f"dates: {pref['date_start']}–{pref['date_end']}")
+        else:
+            bits.append("date: " + pref["date_start"])
+    if pref.get("budget") is not None:
+        bits.append(f"budget ≤ {pref['budget']}")
+    return ", ".join(bits)
 
 def ask_missing(pref: Dict[str, Any]) -> Optional[str]:
+    # Instead of a rigid template, give a short natural nudge
     has_work_info = bool(pref["skills"]) or bool(pref["date_start"]) or bool(pref["city"]) or (pref["budget"] is not None)
     if not has_work_info:
-        return (
-            "Sure! I can do that 😊\n"
-            "Quick question so I can match better:\n"
-            "• What tasks do you need most? (cleaning, cooking, baby care, etc.)\n"
-            "Optional: location, date, and budget."
-        )
+        return _pick([
+            "Got you 😊 What do you need help with most—cleaning, cooking, baby care, laundry, etc.?",
+            "Sure! What’s the main task you need? (cleaning / cooking / baby care / laundry)",
+            "Okay—tell me the top task you need, and if you have a date or location, add it too."
+        ]) + "\n\nTip: you can type like `cleaning near Tetuan available on 2026-01-12 budget 650`."
     return None
-
 
 def recommend(pref: Dict[str, Any], top_k=10) -> List[Dict[str, Any]]:
     rows = []
-
     for _, hk in HK.iterrows():
         feats = build_features(pref, hk)
 
-        # Hard filters
+        # Hard filters to keep results relevant
         if pref["skills"] and feats["skill_overlap"] < 1:
             continue
         if pref["language"] and feats["language_ok"] == 0:
@@ -285,11 +300,10 @@ def recommend(pref: Dict[str, Any], top_k=10) -> List[Dict[str, Any]]:
         if pref["min_age"] is not None and feats["age_ok"] == 0:
             continue
 
-        # ✅ FIX sklearn warning: predict with DataFrame containing feature names
         Xdf = pd.DataFrame([[feats[c] for c in RECO_FEATURES]], columns=RECO_FEATURES)
         model_proba = float(RECO.predict_proba(Xdf)[0][1])
 
-        # Compatibility score (display)
+        # Compatibility score based on satisfied constraints
         constraint_count = 0
         satisfied = 0
 
@@ -311,7 +325,7 @@ def recommend(pref: Dict[str, Any], top_k=10) -> List[Dict[str, Any]]:
         compat_score = round((satisfied / max(constraint_count, 1)) * 100, 1)
 
         # packages demo
-        pkg = hk["package_type"]
+        pkg = hk.get("package_type", "hourly")
         price = int(hk["price"])
         if pkg == "hourly":
             packages = [
@@ -341,7 +355,7 @@ def recommend(pref: Dict[str, Any], top_k=10) -> List[Dict[str, Any]]:
             "skills": str(hk["skills"]).split("|"),
             "languages": str(hk["languages"]).split("|"),
             "experience_years": int(hk["experience_years"]),
-            "package_type": hk["package_type"],
+            "package_type": pkg,
             "base_price": price,
             "match_score": compat_score,
             "model_score": round(model_proba * 100, 1),
@@ -351,88 +365,94 @@ def recommend(pref: Dict[str, Any], top_k=10) -> List[Dict[str, Any]]:
     rows.sort(key=lambda x: x["model_score"], reverse=True)
     return rows[:top_k]
 
+# ---------- Natural replies ----------
+def intro() -> str:
+    return _pick([
+        "Hi! I’m Casaligan Assistant 🤝 Tell me what you need and I’ll find matches.",
+        "Hello 😊 Describe the housekeeper you need and I’ll recommend options.",
+        "Hey! Tell me your needs (skills, date, budget, location) and I’ll match you."
+    ]) + "\n\nTip: `cleaning near Tetuan available on 2026-01-12 budget 650`"
 
-# ---------- Conversational routing ----------
-def friendly_intro():
-    return (
-        "Hi! I’m Casaligan Assistant 🤝\n"
-        "Tell me what you need naturally, like:\n"
-        "• `female chavacano cleaning near Tetuan available on 2026-01-12 budget 650`\n"
-        "• `baby care from Jan 12 to Jan 14 near Zamboanga City`\n\n"
-        "You can mention: skills, budget, language, location, age, gender, and dates."
-    )
+def reply_off_topic() -> str:
+    return _pick([
+        "I can help with Casaligan matching 😊 If you want housekeeper suggestions, tell me the task + location/date/budget.",
+        "I might not be the best for that 😅 But I *can* recommend housekeepers—just say what you need (skills + date + location).",
+        "Let’s keep it Casaligan-related 🙌 Tell me: what task do you need help with (cleaning, cooking, baby care, etc.)?"
+    ]) + "\n\nQuick example: `baby care from Jan 12 to Jan 14 near Zamboanga City`"
 
-
-def handle_non_reco(intent: str, msg: str) -> str:
+def reply_support(msg: str) -> str:
     m = msg.lower()
-
-    if intent == "SMALLTALK":
-        if any(x in m for x in ["hello", "hi", "good morning", "good evening"]):
-            return friendly_intro()
-        if "who are you" in m or "what can you do" in m:
-            return "I’m Casaligan Assistant 🙂 I help you find available housekeepers fast through chat."
-        if "thanks" in m or "thank you" in m:
-            return "You’re welcome! Want me to recommend someone now? 😊"
-        return friendly_intro()
-
-    if intent == "JOB_POST":
+    if any(x in m for x in ["login", "password", "reset"]):
         return (
-            "Sure! For a strong job post, give me these:\n"
-            "1) Location (city/area)\n"
-            "2) Tasks (skills)\n"
-            "3) Schedule (date/range)\n"
-            "4) Budget\n\n"
-            "Example: `Tetuan, cleaning + laundry, Jan 12–14, budget 650`"
+            "Okay—let’s fix that.\n"
+            "• Double-check your email/phone spelling\n"
+            "• Try “Forgot Password”\n"
+            "• If it still fails, tell me the exact error text you see\n\n"
+            "Tip: after login works, you can chat: `cleaning near Tetuan budget 650`."
         )
-
-    if intent == "SUPPORT":
-        if "login" in m or "password" in m or "reset" in m:
-            return (
-                "For login issues:\n"
-                "• Double-check email/phone spelling\n"
-                "• Use “Forgot Password”\n"
-                "• If locked, wait a bit then retry\n\n"
-                "Tell me the exact error and I’ll guide you."
-            )
-        if "payment" in m or "refund" in m:
-            return (
-                "For payments/refunds:\n"
-                "• Check balance and internet\n"
-                "• Retry or switch method\n"
-                "• Save the reference number\n\n"
-                "Tell me what step failed and I’ll help."
-            )
-        return "Tell me what went wrong (login/payment/app navigation) and I’ll help."
-
+    if any(x in m for x in ["payment", "refund"]):
+        return (
+            "Got it. For payments:\n"
+            "• Check internet and balance\n"
+            "• Try again or change payment method\n"
+            "• Save the reference number if shown\n\n"
+            "Tell me what step failed (pay button, verification, or confirmation)."
+        )
     return (
-        "I can help with:\n"
-        "1) Finding housekeepers\n"
-        "2) Posting a job\n"
-        "3) App support\n\n"
-        "If you want recommendations, describe skills + date + location."
+        "Tell me what’s happening (login, payment, profile view, or app error) and what the message says.\n"
+        "I’ll guide you step-by-step."
     )
 
+def reply_job_post() -> str:
+    return (
+        "Sure—here’s a quick way to post a job:\n"
+        "1) Location\n"
+        "2) Tasks needed (skills)\n"
+        "3) Schedule (date/range)\n"
+        "4) Budget\n\n"
+        "Example: `Tetuan, cleaning + laundry, Jan 12–14, budget 650`"
+    )
+
+def reply_reco_results(pref: Dict[str, Any], n: int) -> str:
+    summ = _format_summary(pref)
+    lead = _pick([
+        "Alright—here are the best matches I found 😊",
+        "Okay! Here are the closest matches 👇",
+        "Got it. These are the best options based on what you said:"
+    ])
+    if summ:
+        lead += f"\n({summ})"
+    lead += f"\n\nTip: Click a profile card to view packages. You can also add more filters like `chavacano`, `under 500`, or a date."
+    return lead
+
+def reply_no_results(pref: Dict[str, Any]) -> str:
+    summ = _format_summary(pref)
+    msg = _pick([
+        "Hmm… I couldn’t find a strong match with those exact constraints.",
+        "No exact match popped up for that combo.",
+        "I tried—but your filters are a bit tight for the current list."
+    ])
+    if summ:
+        msg += f"\n({summ})"
+    msg += "\n\nTry one of these:\n• Remove 1 filter (budget/date/language)\n• Use a nearby location\n• Add only 1 main skill first (ex: `cleaning`) then refine"
+    return msg
 
 # ---------- FastAPI ----------
 app = FastAPI(title="Casaligan AI Demo")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-
 class ChatIn(BaseModel):
     message: str
     context: Dict[str, Any] = {}
-
 
 @app.get("/", response_class=HTMLResponse)
 def home():
     return FileResponse("static/index.html")
 
-
 @app.post("/api/chat")
 def chat(payload: ChatIn):
     msg = (payload.message or "").strip()
     ctx = payload.context or {}
-    followup_mode = bool(ctx.get("needs_more_info"))
 
     if not msg:
         return JSONResponse({
@@ -443,15 +463,16 @@ def chat(payload: ChatIn):
             "results": []
         })
 
-    intent = detect_intent(msg)
+    # Follow-up mode: if we were already gathering info, treat message as recommendation refinement
+    followup_mode = bool(ctx.get("needs_more_info")) or (ctx.get("last_intent") == "RECOMMEND")
 
-    if followup_mode:
+    intent = detect_intent(msg)
+    if followup_mode and intent in ["SMALLTALK", "OFF_TOPIC"]:
         intent = "RECOMMEND"
 
     if intent == "RECOMMEND":
         pref_new = extract_preferences(msg)
-
-        if followup_mode and isinstance(ctx.get("preferences"), dict):
+        if isinstance(ctx.get("preferences"), dict) and ctx.get("preferences"):
             pref = merge_preferences(ctx["preferences"], pref_new)
         else:
             pref = pref_new
@@ -463,57 +484,67 @@ def chat(payload: ChatIn):
                 "intent": intent,
                 "needs_more_info": True,
                 "preferences": pref,
-                "results": []
+                "results": [],
+                "last_intent": "RECOMMEND"
             })
 
         results = recommend(pref, top_k=10)
-
         if not results:
-            reply = (
-                "Hmm… I couldn’t find a strong match with those exact constraints.\n"
-                "Try relaxing 1 filter (budget/date/language) or add a nearby location."
-            )
             return JSONResponse({
-                "reply": reply,
+                "reply": reply_no_results(pref),
                 "intent": intent,
                 "needs_more_info": False,
                 "preferences": pref,
-                "results": []
+                "results": [],
+                "last_intent": "RECOMMEND"
             })
 
-        summary_bits = []
-        if pref["skills"]:
-            summary_bits.append(f"skills: {', '.join(pref['skills'])}")
-        if pref["city"]:
-            summary_bits.append(f"near {pref['city']}")
-        if pref["language"]:
-            summary_bits.append(f"language: {pref['language']}")
-        if pref["date_start"]:
-            summary_bits.append(
-                f"date: {pref['date_start']}" if pref["date_start"] == pref["date_end"]
-                else f"dates: {pref['date_start']}–{pref['date_end']}"
-            )
-        if pref["budget"] is not None:
-            summary_bits.append(f"budget ≤ {pref['budget']}")
-
-        reply = "Alright — here are the best matches I found"
-        if summary_bits:
-            reply += " (" + ", ".join(summary_bits) + ")"
-        reply += ". Click a profile to view details and packages."
-
         return JSONResponse({
-            "reply": reply,
+            "reply": reply_reco_results(pref, len(results)),
             "intent": intent,
             "needs_more_info": False,
             "preferences": pref,
-            "results": results
+            "results": results,
+            "last_intent": "RECOMMEND"
         })
 
-    reply = handle_non_reco(intent, msg)
+    # Non-recommendation intents
+    if intent == "SMALLTALK":
+        return JSONResponse({
+            "reply": intro(),
+            "intent": intent,
+            "needs_more_info": False,
+            "preferences": {},
+            "results": [],
+            "last_intent": "SMALLTALK"
+        })
+
+    if intent == "SUPPORT":
+        return JSONResponse({
+            "reply": reply_support(msg),
+            "intent": intent,
+            "needs_more_info": False,
+            "preferences": {},
+            "results": [],
+            "last_intent": "SUPPORT"
+        })
+
+    if intent == "JOB_POST":
+        return JSONResponse({
+            "reply": reply_job_post(),
+            "intent": intent,
+            "needs_more_info": False,
+            "preferences": {},
+            "results": [],
+            "last_intent": "JOB_POST"
+        })
+
+    # OFF_TOPIC
     return JSONResponse({
-        "reply": reply,
-        "intent": intent,
+        "reply": reply_off_topic(),
+        "intent": "OFF_TOPIC",
         "needs_more_info": False,
         "preferences": {},
-        "results": []
+        "results": [],
+        "last_intent": "OFF_TOPIC"
     })

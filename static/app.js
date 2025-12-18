@@ -1,226 +1,301 @@
-const chat = document.getElementById("chat");
-const form = document.getElementById("form");
-const input = document.getElementById("input");
-const typing = document.getElementById("typing");
+const chatEl = document.getElementById("chat");
+const msgEl = document.getElementById("msg");
+const sendBtn = document.getElementById("send");
+const statusLine = document.getElementById("status-line");
 
-const modalBackdrop = document.getElementById("modalBackdrop");
-const modalContent = document.getElementById("modalContent");
-const modalClose = document.getElementById("modalClose");
+const resultsEl = document.getElementById("results");
+const resultsSub = document.getElementById("results-sub");
+const pillCount = document.getElementById("pill-count");
 
-let lastResults = [];
-let ctx = { needs_more_info: false, preferences: {} };
+const btnClear = document.getElementById("btn-clear");
+const btnExamples = document.getElementById("btn-examples");
+const tipsPanel = document.getElementById("tips-panel");
+const btnCloseTips = document.getElementById("btn-close-tips");
 
-function scrollToBottom() {
-  chat.scrollTop = chat.scrollHeight;
+const overlay = document.getElementById("modal-overlay");
+const modalClose = document.getElementById("modal-close");
+const modalTitle = document.getElementById("modal-title");
+const modalSub = document.getElementById("modal-sub");
+const modalBody = document.getElementById("modal-body");
+
+let context = {
+  preferences: {},
+  needs_more_info: false,
+  last_intent: ""
+};
+
+function escapeHtml(s) {
+  return (s || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 }
 
-function setTyping(on) {
-  typing.classList.toggle("hidden", !on);
-  if (on) scrollToBottom();
+function scrollChatToBottom() {
+  chatEl.scrollTop = chatEl.scrollHeight;
 }
 
-function el(tag, className, html) {
-  const e = document.createElement(tag);
-  if (className) e.className = className;
-  if (html !== undefined) e.innerHTML = html;
-  return e;
+function setStatus(text) {
+  statusLine.textContent = text;
 }
 
-function addMessage(role, text, results = null) {
-  const isUser = role === "user";
+function bubble(role, text) {
+  const row = document.createElement("div");
+  row.className = `row ${role}`;
 
-  const wrap = el("div", "flex gap-3 my-3");
-  wrap.classList.add("animate-pop");
+  const b = document.createElement("div");
+  b.className = `bubble ${role === "user" ? "user" : "assistant"}`;
 
-  const avatar = el(
-    "div",
-    "h-9 w-9 rounded-2xl grid place-items-center font-bold border border-white/10 flex-none " +
-      (isUser
-        ? "bg-gradient-to-br from-fuchsia-500/25 via-purple-500/20 to-pink-500/20 text-white/90"
-        : "bg-white/5 text-white/70")
-  );
-  avatar.textContent = isUser ? "U" : "C";
+  // Keep the assistant more natural: no forced templates in UI.
+  // If backend returns multi-lines, show them nicely.
+  const safe = escapeHtml(text).replaceAll("\n", "<br/>");
+  b.innerHTML = safe;
 
-  const bubble = el(
-    "div",
-    "max-w-[980px] rounded-2xl border border-white/10 px-4 py-3 " +
-      "shadow-[0_25px_80px_rgba(0,0,0,0.35)] " +
-      (isUser
-        ? "bg-gradient-to-br from-fuchsia-500/15 via-purple-500/10 to-pink-500/10"
-        : "bg-white/5")
-  );
-  bubble.style.whiteSpace = "pre-wrap";
-  bubble.textContent = text;
+  row.appendChild(b);
+  chatEl.appendChild(row);
+  scrollChatToBottom();
+}
 
-  wrap.appendChild(avatar);
-  wrap.appendChild(bubble);
-  chat.appendChild(wrap);
+function typingIndicator(show) {
+  const id = "typing-indicator";
+  const existing = document.getElementById(id);
 
-  if (results && results.length) {
-    lastResults = results;
+  if (!show) {
+    if (existing) existing.remove();
+    return;
+  }
+  if (existing) return;
 
-    // ✅ auto-rows-min + items-start prevents stretching
-    const cards = el("div", "mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-3 items-start auto-rows-min");
+  const row = document.createElement("div");
+  row.id = id;
+  row.className = "row assistant";
 
-    results.forEach((r) => {
-      // ✅ h-fit + self-start prevents tall cards
-      const card = el(
-        "div",
-        "rounded-2xl border border-white/10 bg-black/30 hover:bg-white/5 transition cursor-pointer p-4 " +
-          "hover:-translate-y-0.5 active:scale-[0.99] " +
-          "h-fit self-start flex flex-col gap-3"
-      );
+  const b = document.createElement("div");
+  b.className = "bubble assistant";
+  b.innerHTML = `
+    <span class="typing">
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </span>
+  `;
 
-      card.innerHTML = `
-        <div class="flex items-start justify-between gap-3">
-          <div class="min-w-0">
-            <div class="font-semibold text-sm truncate">
-              ${r.name} <span class="text-white/50">(${r.housekeeper_id})</span>
-            </div>
-            <div class="text-xs text-white/65 mt-1">
-              ${r.gender}, ${r.age} • ${r.city} • ${r.experience_years} yrs exp
-            </div>
-          </div>
+  row.appendChild(b);
+  chatEl.appendChild(row);
+  scrollChatToBottom();
+}
 
-          <div class="shrink-0 text-[11px] px-3 py-1.5 rounded-full border border-white/10
-                      bg-gradient-to-r from-fuchsia-500/20 via-purple-500/20 to-pink-500/20 text-white/85">
-            ${r.match_score}% fit
-          </div>
-        </div>
+function formatProfileSub(r) {
+  const bits = [];
+  bits.push(`${r.gender}, ${r.age}`);
+  bits.push(r.city);
+  bits.push(`${r.experience_years} yr exp`);
+  return bits.join(" • ");
+}
 
-        <div class="text-xs text-white/75 space-y-1">
-          <div class="truncate">
-            <span class="text-white/50">Languages:</span> ${r.languages.join(", ")}
-          </div>
-
-          <div class="line-clamp-2">
-            <span class="text-white/50">Skills:</span> ${r.skills.join(", ")}
-          </div>
-        </div>
-
-        <div class="text-xs text-white/55">
-          Tap to view packages →
-        </div>
-      `;
-
-      card.addEventListener("click", () => openProfile(r.housekeeper_id));
-      cards.appendChild(card);
-    });
-
-    bubble.appendChild(cards);
+function renderResults(results) {
+  if (!results || results.length === 0) {
+    resultsSub.textContent = "No results";
+    pillCount.classList.add("hidden");
+    resultsEl.innerHTML = `<div class="text-sm text-white/60">No recommendations yet.</div>`;
+    return;
   }
 
-  scrollToBottom();
+  resultsSub.textContent = "Click a card to view packages";
+  pillCount.textContent = `${results.length} shown`;
+  pillCount.classList.remove("hidden");
+
+  const cards = results.map((r) => {
+    const skills = (r.skills || []).slice(0, 4).map(s => `<span class="badge">${escapeHtml(s)}</span>`).join(" ");
+    const langs = (r.languages || []).slice(0, 3).map(s => `<span class="badge">${escapeHtml(s)}</span>`).join(" ");
+
+    return `
+      <button class="card w-full text-left" data-id="${escapeHtml(String(r.housekeeper_id))}">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <div class="text-sm font-semibold">${escapeHtml(r.name)}</div>
+            <div class="mt-1 text-xs text-white/60">${escapeHtml(formatProfileSub(r))}</div>
+          </div>
+          <div class="text-right">
+            <div class="text-xs text-white/60">Match</div>
+            <div class="text-sm font-bold">${escapeHtml(String(r.match_score))}%</div>
+          </div>
+        </div>
+
+        <div class="mt-3 flex flex-wrap gap-2">
+          ${skills || `<span class="badge">no skills listed</span>`}
+        </div>
+
+        <div class="mt-2 flex flex-wrap gap-2 opacity-90">
+          ${langs || `<span class="badge">no languages listed</span>`}
+        </div>
+
+        <div class="mt-3 text-xs text-white/60">
+          Base price: <span class="text-white/80">${escapeHtml(String(r.base_price))}</span> • Package: <span class="text-white/80">${escapeHtml(String(r.package_type))}</span>
+        </div>
+      </button>
+    `;
+  }).join("");
+
+  resultsEl.innerHTML = `<div class="grid gap-3">${cards}</div>`;
+
+  // card click
+  resultsEl.querySelectorAll("[data-id]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.getAttribute("data-id");
+      const chosen = results.find(x => String(x.housekeeper_id) === String(id));
+      if (chosen) openModal(chosen);
+    });
+  });
 }
 
-function openProfile(housekeeperId) {
-  const r = lastResults.find(x => x.housekeeper_id === housekeeperId);
-  if (!r) return;
+function openModal(r) {
+  modalTitle.textContent = r.name;
+  modalSub.textContent = formatProfileSub(r);
 
-  modalContent.innerHTML = `
-    <div class="flex items-start justify-between gap-3">
-      <div class="min-w-0">
-        <div class="text-xl font-semibold">${r.name}</div>
-        <div class="text-sm text-white/70 mt-1">
-          ${r.gender}, ${r.age} • ${r.city} • ${r.experience_years} yrs experience
+  const skills = (r.skills || []).map(s => `<span class="badge">${escapeHtml(s)}</span>`).join(" ");
+  const langs = (r.languages || []).map(s => `<span class="badge">${escapeHtml(s)}</span>`).join(" ");
+
+  const packages = (r.packages || []).map(p => `
+    <div class="card">
+      <div class="flex items-start justify-between gap-3">
+        <div class="font-semibold text-sm">${escapeHtml(p.name)}</div>
+        <div class="text-sm font-bold">${escapeHtml(String(p.price))}</div>
+      </div>
+      <div class="mt-1 text-xs text-white/60">Tap “Hire” in the full system (demo only)</div>
+    </div>
+  `).join("");
+
+  modalBody.innerHTML = `
+    <div class="grid gap-4">
+      <div>
+        <div class="text-sm font-semibold">Skills</div>
+        <div class="mt-2 flex flex-wrap gap-2">${skills || `<span class="badge">none</span>`}</div>
+      </div>
+
+      <div>
+        <div class="text-sm font-semibold">Languages</div>
+        <div class="mt-2 flex flex-wrap gap-2">${langs || `<span class="badge">none</span>`}</div>
+      </div>
+
+      <div class="grid gap-2">
+        <div class="text-sm font-semibold">Packages</div>
+        <div class="grid gap-3">
+          ${packages || `<div class="text-sm text-white/60">No packages available.</div>`}
         </div>
       </div>
 
-      <div class="shrink-0 text-xs px-3 py-1.5 rounded-full border border-white/10
-                  bg-gradient-to-r from-fuchsia-500/25 via-purple-500/25 to-pink-500/25 text-white/85">
-        Compatibility: ${r.match_score}%
-      </div>
-    </div>
-
-    <div class="mt-4 flex flex-wrap gap-2 text-xs">
-      <span class="px-3 py-1.5 rounded-full border border-white/10 bg-white/5 text-white/85">
-        <b>Languages:</b> ${r.languages.join(", ")}
-      </span>
-      <span class="px-3 py-1.5 rounded-full border border-white/10 bg-white/5 text-white/85">
-        <b>Skills:</b> ${r.skills.join(", ")}
-      </span>
-      <span class="px-3 py-1.5 rounded-full border border-white/10 bg-white/5 text-white/85">
-        <b>Package:</b> ${r.package_type}
-      </span>
-      <span class="px-3 py-1.5 rounded-full border border-white/10 bg-white/5 text-white/85">
-        <b>Base:</b> ₱${r.base_price}
-      </span>
-    </div>
-
-    <div class="mt-5">
-      <div class="text-sm font-semibold">Packages</div>
-      <div class="mt-3 grid gap-3 sm:grid-cols-2">
-        ${r.packages.map(p => `
-          <div class="rounded-2xl border border-white/10 bg-black/40 p-4">
-            <div class="font-semibold text-sm">${p.name}</div>
-            <div class="text-sm text-emerald-200/90 mt-1">₱${p.price}</div>
-            <div class="text-xs text-white/60 mt-2">
-              Demo only — in the real app this proceeds to direct hire.
-            </div>
-          </div>
-        `).join("")}
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-white/70">
+        <div class="font-semibold text-white">Quick note</div>
+        <div class="mt-1">
+          Your match score is based on how many of your constraints were satisfied (skills, language, budget, dates, etc.).
+        </div>
       </div>
     </div>
   `;
 
-  modalBackdrop.classList.remove("hidden");
+  overlay.classList.remove("hidden");
 }
 
 function closeModal() {
-  modalBackdrop.classList.add("hidden");
+  overlay.classList.add("hidden");
 }
 
+overlay.addEventListener("click", (e) => {
+  // click outside modal closes
+  if (e.target === overlay) closeModal();
+});
 modalClose.addEventListener("click", closeModal);
-
-// click outside modal closes
-modalBackdrop.addEventListener("click", (e) => {
-  const modal = document.getElementById("modal");
-  if (!modal.contains(e.target)) closeModal();
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !overlay.classList.contains("hidden")) closeModal();
 });
 
-// Esc closes
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && !modalBackdrop.classList.contains("hidden")) {
-    closeModal();
+async function sendMessage() {
+  const text = msgEl.value.trim();
+  if (!text) return;
+
+  bubble("user", text);
+  msgEl.value = "";
+  msgEl.focus();
+
+  setStatus("Thinking…");
+  typingIndicator(true);
+
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: text,
+        context: context
+      })
+    });
+
+    const data = await res.json();
+
+    typingIndicator(false);
+    setStatus("Ready");
+
+    // keep assistant natural (no UI-injected templates)
+    if (data.reply) bubble("assistant", data.reply);
+
+    // store context for follow-up handling
+    context = {
+      preferences: data.preferences || {},
+      needs_more_info: !!data.needs_more_info,
+      last_intent: data.last_intent || data.intent || ""
+    };
+
+    // show results if any
+    if (Array.isArray(data.results) && data.results.length) {
+      renderResults(data.results);
+    } else {
+      // If no results, keep previous cards? (we clear only when intent is RECOMMEND and no results)
+      if ((data.intent || "") === "RECOMMEND") {
+        renderResults([]);
+      }
+    }
+
+  } catch (err) {
+    typingIndicator(false);
+    setStatus("Error");
+    bubble("assistant", "Oops—something went wrong. Try again.");
+    console.error(err);
   }
-});
-
-// Sidebar chips
-document.querySelectorAll(".chip").forEach(btn => {
-  btn.addEventListener("click", () => {
-    input.value = btn.dataset.prompt || "";
-    input.focus();
-  });
-});
-
-async function sendMessage(text) {
-  addMessage("user", text);
-  setTyping(true);
-
-  const res = await fetch("/api/chat", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ message: text, context: ctx })
-  });
-
-  const data = await res.json();
-  setTyping(false);
-
-  ctx.needs_more_info = !!data.needs_more_info;
-  ctx.preferences = data.preferences || ctx.preferences || {};
-  if (data.results && data.results.length) ctx.needs_more_info = false;
-
-  addMessage("system", data.reply, data.results || []);
 }
 
-// initial message
-addMessage("system", "Hi! I’m Casaligan Assistant 🤝 Tell me what you need and I’ll match you with available housekeepers.");
-
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const text = input.value.trim();
-  if (!text) return;
-  input.value = "";
-  input.focus();
-  await sendMessage(text);
+sendBtn.addEventListener("click", sendMessage);
+msgEl.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") sendMessage();
 });
+
+// Clear chat
+btnClear.addEventListener("click", () => {
+  chatEl.innerHTML = "";
+  renderResults([]);
+  context = { preferences: {}, needs_more_info: false, last_intent: "" };
+  setStatus("Ready");
+  bubble("assistant", "Chat cleared. Tell me what you need and I’ll recommend matches.");
+});
+
+// Tips panel toggle
+btnExamples.addEventListener("click", () => tipsPanel.classList.toggle("hidden"));
+btnCloseTips.addEventListener("click", () => tipsPanel.classList.add("hidden"));
+
+// Chips & quick links (fills input only — doesn’t send templates into chat)
+document.querySelectorAll(".chip").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    msgEl.value = btn.getAttribute("data-chip") || "";
+    msgEl.focus();
+  });
+});
+document.querySelectorAll("[data-quick]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    msgEl.value = btn.getAttribute("data-quick") || "";
+    msgEl.focus();
+  });
+});
+
+// Initial welcome (short, not templated)
+bubble("assistant", "Hi! Tell me what you need (skill + location/date/budget if you have it) and I’ll recommend matches 😊");
+renderResults([]);
