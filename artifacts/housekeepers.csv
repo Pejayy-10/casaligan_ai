@@ -1,0 +1,301 @@
+housekeeper_id,name,age,gender,city,skills,experience_years,languages,package_type,price,blocked_ranges
+HK-0001,Mae Dela Cruz,25,female,Canelar,cooking|ironing|laundry,4,bisaya|chavacano,hourly,87,2026-04-05:2026-04-06|2025-12-25:2025-12-26|2026-02-11:2026-02-13|2026-04-26:2026-04-27
+HK-0002,Joan Villanueva,52,male,Putik,deep cleaning|baby care|cleaning|pet care|laundry,4,chavacano|filipino,hourly,114,2026-03-14:2026-03-15
+HK-0003,Joan Villanueva,24,male,Divisoria,cleaning|gardening|laundry|cooking,3,english|filipino,weekly,2681,2026-03-20:2026-03-22|2026-01-04:2026-01-05|2026-02-14:2026-02-17|2026-01-07:2026-01-09
+HK-0004,Ruth Garcia,35,male,Divisoria,elder care|deep cleaning|cooking,6,chavacano,weekly,3186,
+HK-0005,Nina Villanueva,52,female,Guiwan,pet care|baby care|cooking|elder care|ironing,2,chavacano,hourly,98,
+HK-0006,Mark Gonzales,35,female,Putik,cooking|gardening|pet care|elder care,2,filipino,hourly,82,2026-05-04:2026-05-07|2026-05-16:2026-05-20|2026-05-16:2026-05-20|2026-03-20:2026-03-22
+HK-0007,Mark Gonzales,23,female,Tetuan,ironing|pet care|laundry,3,filipino,daily,385,2026-02-20:2026-02-21|2026-01-16:2026-01-19|2026-03-15:2026-03-16|2026-03-03:2026-03-07
+HK-0008,Mae Santos,18,male,Sangali,house organization|laundry|baby care,0,chavacano|filipino,hourly,80,2026-03-23:2026-03-25
+HK-0009,Joan Gonzales,38,male,Zamboanga City,elder care|baby care,1,english|filipino,weekly,2958,
+HK-0010,Jessa Torres,22,female,Guiwan,house organization|ironing|baby care|gardening|pet care,1,english|filipino,weekly,2088,2026-03-07:2026-03-11
+HK-0011,Liza Santos,46,male,Tetuan,cooking|laundry|elder care,6,english|filipino,weekly,2686,2025-12-19:2025-12-20
+HK-0012,Jessa Villanueva,32,female,Zamboanga City,laundry|house organization|cooking|ironing,3,chavacano|english,hourly,66,2026-05-14:2026-05-18|2026-02-18:2026-02-22|2026-04-01:2026-04-03|2026-01-11:2026-01-12
+HK-0013,Mark Villanueva,40,male,Ayala,cleaning|laundry|deep cleaning|cooking|elder care,2,bisaya|filipino,hourly,91,2026-02-04:2026-02-08
+HK-0014,Riza Garcia,29,male,Sta. Maria,laundry|gardening|deep cleaning,1,bisaya|english,hourly,96,
+HK-0015,Kyla Dela Cruz,44,male,Sta. Maria,pet care|cleaning|ironing,2,bisaya|filipino,daily,521,2026-03-01:2026-03-05|2026-05-09:2026-05-13|2026-01-26:2026-01-28
+HK-0016,Mae Reyes,21,female,Divisoria,cleaning|gardening,2,bisaya|filipino,hourly,120,
+HK-0017,Kyla Villanueva,29,female,Tetuan,pet care|laundry|cooking,3,chavacano|english,hourly,72,2026-05-16:2026-05-19|2026-02-22:2026-02-24|2026-03-08:2026-03-10
+HK-0018,Mark Gonzales,26,male,Sta. Maria,laundry|cleaning|gardening|baby care,5,bisaya,hourly,70,2026-02-10:2026-02-13|2026-01-20:2026-01-23|2026-01-04:2026-01-06|2026-03-22:2026-03-25
+HK-0019,Kyla Flores,52,male,Sangali,house organization|baby care,3,bisaya|english,hourly,62,2026-01-16:2026-01-17|2026-05-08:2026-05-10
+HK-0020,Aira Torres,31,male,Putik,house organization|gardening|baby care|pet care,0,chavacano|english,daily,569,
+HK-0021,Nina Santos,26,male,Guiwan,house organization|pet care|cleaning|gardening|deep cleaning,4,bisaya|chavacano,hourly,92,2025-12-27:2025-12-30|2026-05-16:2026-05-18|2026-04-07:2026-04-09|2025-12-28:2025-12-31
+HK-0022,Mark Villanueva,40,female,Putik,elder care|house organization,3,chavacano|filipino,weekly,2648,2026-02-16:2026-02-18
+HK-0023,Nina Flores,19,female,Divisoria,cooking|baby care|ironing|pet care|elder care,0,bisaya|english,daily,478,2026-02-07:2026-02-11
+HK-0024,Aira Reyes,32,female,Zamboanga City,pet care|elder care|baby care,2,bisaya|chavacano,daily,654,2026-04-27:2026-05-01|2026-05-04:2026-05-07
+HK-0025,Mae Dela Cruz,34,female,Canelar,laundry|pet care,4,chavacano|filipino,daily,385,2026-04-27:2026-04-28|2026-03-26:2026-03-28|2026-02-21:2026-02-22|2026-04-08:2026-04-09
+HK-0026,Jessa Villanueva,41,male,Tetuan,deep cleaning|elder care|laundry|house organization,4,bisaya|filipino,weekly,2605,2026-03-11:2026-03-15|2026-03-03:2026-03-05|2026-02-05:2026-02-09
+HK-0027,Mae Gonzales,29,male,Ayala,baby care|deep cleaning,2,chavacano|filipino,weekly,3108,2026-04-16:2026-04-20|2026-04-10:2026-04-12
+HK-0028,Carlo Villanueva,28,female,Canelar,laundry|cooking|baby care|deep cleaning,5,chavacano|english,hourly,105,2026-04-18:2026-04-19
+HK-0029,Joan Gonzales,54,female,Ayala,pet care|cooking|ironing|elder care|deep cleaning,1,chavacano|english,hourly,84,2026-02-12:2026-02-14|2026-04-29:2026-05-03|2025-12-30:2026-01-01
+HK-0030,Jessa Dela Cruz,26,male,Sangali,gardening|house organization|pet care|deep cleaning,4,bisaya|filipino,hourly,105,2026-04-12:2026-04-15|2026-02-19:2026-02-22|2026-04-30:2026-05-04
+HK-0031,Liza Dela Cruz,35,male,Tetuan,cooking|baby care|elder care|ironing,2,chavacano|english,hourly,86,2026-03-26:2026-03-28
+HK-0032,Ruth Villanueva,22,male,Ayala,house organization|gardening|pet care|cleaning,1,filipino,weekly,2197,
+HK-0033,Alex Santos,48,female,Divisoria,pet care|deep cleaning|cooking|gardening,5,filipino,hourly,111,2026-03-14:2026-03-18|2026-01-29:2026-02-02|2026-01-19:2026-01-20
+HK-0034,Aira Santos,23,male,Guiwan,ironing|cleaning|baby care|cooking|deep cleaning,3,filipino,daily,649,2026-04-04:2026-04-07|2026-01-07:2026-01-11
+HK-0035,Jessa Reyes,40,female,Tetuan,cleaning|cooking,4,english,hourly,79,2026-01-19:2026-01-23
+HK-0036,Joan Flores,54,female,Sta. Maria,elder care|ironing|laundry|pet care,4,bisaya|chavacano,hourly,114,2025-12-24:2025-12-27|2026-05-14:2026-05-18|2026-03-29:2026-03-31|2026-01-06:2026-01-08
+HK-0037,Carlo Villanueva,25,female,Divisoria,elder care|laundry|deep cleaning|cleaning|cooking,3,chavacano|english,daily,704,2026-01-26:2026-01-30|2026-02-01:2026-02-04|2026-05-04:2026-05-08
+HK-0038,Riza Torres,55,male,Divisoria,laundry|baby care|gardening,0,filipino,weekly,3214,2026-03-14:2026-03-15|2026-04-23:2026-04-26|2026-02-02:2026-02-06
+HK-0039,Carlo Santos,34,male,Canelar,house organization|cleaning|cooking|deep cleaning,3,filipino,weekly,2649,2026-04-18:2026-04-22
+HK-0040,Liza Dela Cruz,23,male,Putik,cooking|baby care|elder care|deep cleaning|house organization,3,filipino,weekly,1959,2026-03-12:2026-03-15|2026-04-13:2026-04-16|2026-03-06:2026-03-09|2026-02-15:2026-02-16
+HK-0041,Aira Garcia,38,female,Sangali,cooking|deep cleaning|gardening,3,filipino,weekly,2979,2026-02-28:2026-03-01|2026-02-05:2026-02-08|2026-02-14:2026-02-17|2026-02-01:2026-02-04
+HK-0042,Joan Villanueva,35,female,Zamboanga City,ironing|gardening|laundry|pet care,6,english|filipino,daily,498,2026-03-15:2026-03-17|2025-12-31:2026-01-03|2026-04-19:2026-04-20
+HK-0043,Ruth Reyes,49,female,Zamboanga City,ironing|baby care|laundry,1,bisaya|english,daily,500,2026-02-13:2026-02-17|2026-04-12:2026-04-16|2026-03-04:2026-03-08|2026-03-06:2026-03-07
+HK-0044,Liza Flores,31,female,Canelar,ironing|cooking,5,english,hourly,95,2026-04-12:2026-04-16|2026-03-02:2026-03-03|2026-02-15:2026-02-18
+HK-0045,Mark Flores,47,female,Putik,deep cleaning|cooking|pet care|cleaning,2,chavacano|filipino,daily,600,2026-01-05:2026-01-06
+HK-0046,Joan Dela Cruz,54,male,Sta. Maria,gardening|baby care,3,bisaya|chavacano,weekly,3288,2026-04-23:2026-04-27|2026-01-07:2026-01-08|2026-04-07:2026-04-10|2026-02-20:2026-02-21
+HK-0047,Jessa Gonzales,54,female,Canelar,ironing|gardening,2,filipino,daily,517,2026-05-16:2026-05-20
+HK-0048,Nina Reyes,23,male,Divisoria,elder care|deep cleaning|laundry|pet care|gardening,2,chavacano|filipino,daily,405,2026-05-07:2026-05-08|2026-04-13:2026-04-14|2026-03-08:2026-03-11
+HK-0049,Riza Flores,43,female,Sangali,pet care|cleaning|cooking|baby care|ironing,4,chavacano|filipino,daily,575,
+HK-0050,Carlo Flores,53,female,Canelar,gardening|laundry|cleaning|elder care|baby care,3,chavacano,daily,526,2025-12-21:2025-12-25|2026-01-10:2026-01-12|2026-01-16:2026-01-20|2026-01-17:2026-01-19
+HK-0051,Alex Torres,50,male,Ayala,gardening|cooking|deep cleaning|baby care|laundry,0,bisaya|filipino,weekly,2587,2026-01-04:2026-01-07
+HK-0052,Aira Torres,50,male,Zamboanga City,baby care|gardening|ironing|cooking,2,filipino,weekly,2395,2026-03-24:2026-03-28|2026-03-10:2026-03-12|2026-02-17:2026-02-21|2026-02-15:2026-02-19
+HK-0053,Joan Gonzales,48,male,Ayala,gardening|cleaning|ironing,3,filipino,hourly,96,2026-01-12:2026-01-16|2025-12-21:2025-12-23|2026-04-01:2026-04-03
+HK-0054,Liza Reyes,34,male,Ayala,elder care|house organization,7,filipino,weekly,2887,2026-05-05:2026-05-06|2026-01-04:2026-01-06|2026-03-01:2026-03-03
+HK-0055,Mark Garcia,45,female,Tetuan,ironing|baby care|cleaning|gardening|deep cleaning,4,chavacano|filipino,daily,542,2026-01-24:2026-01-26|2026-05-02:2026-05-06|2026-05-11:2026-05-13
+HK-0056,Jessa Villanueva,23,male,Putik,deep cleaning|ironing|cooking|gardening|elder care,0,filipino,hourly,89,2026-03-01:2026-03-03|2026-01-05:2026-01-09|2026-03-16:2026-03-19
+HK-0057,Aira Santos,34,male,Canelar,pet care|gardening|laundry,3,filipino,weekly,4041,2026-03-03:2026-03-04|2026-03-29:2026-04-01
+HK-0058,Kyla Gonzales,49,male,Putik,cooking|deep cleaning|baby care|elder care,3,chavacano,weekly,2951,2026-01-11:2026-01-12
+HK-0059,Carlo Reyes,20,male,Guiwan,baby care|elder care,3,chavacano|english,hourly,71,2026-03-21:2026-03-24|2026-01-29:2026-02-01|2026-04-20:2026-04-23|2026-03-14:2026-03-15
+HK-0060,Jessa Dela Cruz,27,female,Ayala,laundry|pet care|cleaning|ironing,5,filipino,weekly,3178,2026-05-16:2026-05-20|2026-03-23:2026-03-24
+HK-0061,Joan Reyes,48,female,Sangali,deep cleaning|cooking|laundry|elder care,5,bisaya|chavacano,daily,459,2026-01-16:2026-01-18|2025-12-29:2025-12-30|2026-03-05:2026-03-09
+HK-0062,Carlo Villanueva,33,female,Ayala,elder care|house organization|pet care|baby care|deep cleaning,6,bisaya|chavacano,weekly,2093,
+HK-0063,Kyla Dela Cruz,35,female,Divisoria,gardening|deep cleaning|cooking,4,chavacano|english,weekly,3903,2026-05-06:2026-05-09|2026-01-02:2026-01-06
+HK-0064,Ruth Santos,25,male,Tetuan,deep cleaning|cleaning|house organization,1,chavacano|english,hourly,80,2026-02-08:2026-02-09|2026-05-08:2026-05-10|2026-02-11:2026-02-13|2026-03-12:2026-03-14
+HK-0065,Liza Reyes,35,female,Guiwan,ironing|laundry|cleaning|house organization,3,chavacano|english,hourly,81,2026-03-10:2026-03-11|2026-01-31:2026-02-03|2025-12-31:2026-01-02|2026-04-04:2026-04-05
+HK-0066,Carlo Gonzales,48,male,Divisoria,gardening|house organization,0,chavacano|filipino,weekly,2834,2026-03-05:2026-03-09|2025-12-25:2025-12-26|2026-04-19:2026-04-23|2026-04-06:2026-04-07
+HK-0067,Joan Reyes,22,female,Divisoria,laundry|ironing|baby care,1,chavacano|filipino,weekly,3038,2026-03-25:2026-03-28|2026-04-13:2026-04-17
+HK-0068,Joan Reyes,53,female,Ayala,cooking|pet care|elder care|house organization|deep cleaning,1,chavacano|filipino,daily,703,2026-03-08:2026-03-11|2026-03-23:2026-03-25|2026-04-18:2026-04-19
+HK-0069,Alex Torres,23,male,Tetuan,ironing|house organization|cleaning|baby care,1,bisaya|filipino,weekly,2637,
+HK-0070,Ruth Dela Cruz,45,female,Canelar,elder care|laundry|cooking|house organization,5,chavacano|english,hourly,70,2026-05-09:2026-05-12|2026-01-16:2026-01-19
+HK-0071,Joan Garcia,45,female,Canelar,ironing|baby care,3,chavacano|filipino,daily,679,2025-12-19:2025-12-21|2026-01-23:2026-01-27
+HK-0072,Mark Santos,19,female,Sangali,pet care|deep cleaning|gardening,0,filipino,weekly,2893,2026-05-12:2026-05-13|2025-12-31:2026-01-02
+HK-0073,Kyla Gonzales,23,male,Sta. Maria,gardening|deep cleaning|pet care|ironing|laundry,4,chavacano|english,daily,627,
+HK-0074,Carlo Villanueva,51,male,Zamboanga City,pet care|cleaning|house organization,1,bisaya|filipino,hourly,68,2026-03-02:2026-03-05|2026-01-17:2026-01-18
+HK-0075,Ruth Villanueva,29,female,Ayala,house organization|deep cleaning|elder care,4,bisaya|english,hourly,94,2025-12-22:2025-12-26|2026-01-06:2026-01-09|2026-05-14:2026-05-18
+HK-0076,Alex Reyes,44,male,Tetuan,cleaning|elder care|ironing|pet care|baby care,4,chavacano|filipino,daily,584,
+HK-0077,Mae Reyes,33,male,Ayala,pet care|baby care,2,chavacano|english,hourly,93,
+HK-0078,Mark Gonzales,51,female,Divisoria,ironing|cooking|laundry|gardening,4,english|filipino,hourly,78,
+HK-0079,Aira Torres,47,male,Divisoria,ironing|gardening|laundry|cooking,7,filipino,daily,596,2026-01-01:2026-01-04|2026-04-26:2026-04-27|2026-03-07:2026-03-11|2026-04-12:2026-04-13
+HK-0080,Aira Dela Cruz,36,female,Tetuan,gardening|house organization|cleaning|cooking|baby care,1,chavacano|filipino,daily,614,2026-01-25:2026-01-26|2026-04-12:2026-04-13|2026-03-15:2026-03-16|2026-04-26:2026-04-28
+HK-0081,Liza Garcia,46,male,Sangali,elder care|deep cleaning|baby care,1,chavacano|filipino,weekly,3196,2025-12-31:2026-01-03|2026-01-03:2026-01-06|2026-01-11:2026-01-15|2026-02-28:2026-03-03
+HK-0082,Aira Torres,39,female,Guiwan,baby care|pet care|ironing|deep cleaning,5,chavacano|english,weekly,2386,2026-03-12:2026-03-14|2026-05-01:2026-05-02|2026-04-05:2026-04-08
+HK-0083,Liza Garcia,37,female,Putik,gardening|cooking|house organization|laundry,5,english|filipino,hourly,96,2026-05-05:2026-05-06|2026-03-14:2026-03-16|2026-03-24:2026-03-26|2026-01-28:2026-01-30
+HK-0084,Riza Torres,46,female,Ayala,cooking|gardening|baby care|pet care,5,chavacano|filipino,weekly,3755,2026-03-07:2026-03-11
+HK-0085,Liza Reyes,54,male,Sta. Maria,pet care|house organization|deep cleaning|laundry,3,chavacano,hourly,77,2025-12-31:2026-01-04|2026-03-23:2026-03-24
+HK-0086,Riza Villanueva,36,female,Guiwan,gardening|house organization|ironing|pet care,1,bisaya|filipino,hourly,76,2026-03-17:2026-03-18|2026-04-03:2026-04-04|2026-03-29:2026-04-01
+HK-0087,Carlo Garcia,23,male,Putik,elder care|laundry,3,chavacano,hourly,95,2025-12-27:2025-12-30
+HK-0088,Riza Villanueva,48,male,Zamboanga City,cleaning|baby care,4,english|filipino,weekly,3216,2026-05-02:2026-05-06|2026-01-15:2026-01-18|2026-02-16:2026-02-19|2026-01-18:2026-01-19
+HK-0089,Mae Torres,47,female,Tetuan,deep cleaning|house organization|cleaning|elder care|baby care,3,chavacano,daily,693,2025-12-18:2025-12-21|2026-02-17:2026-02-21|2026-02-03:2026-02-04
+HK-0090,Mark Santos,22,female,Ayala,cleaning|pet care|elder care|ironing|gardening,2,chavacano|english,daily,819,2026-01-13:2026-01-16
+HK-0091,Aira Torres,40,male,Guiwan,gardening|ironing|house organization|cleaning|elder care,4,chavacano|filipino,daily,465,2025-12-29:2025-12-31
+HK-0092,Alex Gonzales,37,male,Sangali,baby care|cleaning|cooking|ironing|pet care,1,chavacano|english,weekly,3043,2026-02-25:2026-02-26|2026-03-22:2026-03-26
+HK-0093,Nina Reyes,42,male,Guiwan,gardening|elder care|baby care|pet care|cleaning,3,chavacano|english,weekly,3159,2026-05-06:2026-05-09
+HK-0094,Jessa Villanueva,23,male,Canelar,gardening|pet care|ironing|elder care,4,filipino,weekly,2763,2026-04-08:2026-04-11|2026-01-01:2026-01-02
+HK-0095,Ruth Garcia,41,female,Zamboanga City,deep cleaning|gardening|cleaning,1,english,weekly,2036,2026-03-20:2026-03-24|2026-05-12:2026-05-13
+HK-0096,Liza Garcia,46,male,Divisoria,laundry|ironing|elder care|cooking|house organization,2,chavacano|english,hourly,103,
+HK-0097,Joan Gonzales,49,male,Sangali,baby care|deep cleaning,3,chavacano|english,weekly,2172,2026-04-22:2026-04-24|2026-01-18:2026-01-20
+HK-0098,Joan Dela Cruz,29,male,Tetuan,elder care|laundry|baby care|ironing,3,chavacano,weekly,2994,2026-03-20:2026-03-22
+HK-0099,Kyla Villanueva,26,female,Sta. Maria,elder care|house organization,1,chavacano|filipino,weekly,2877,2026-01-09:2026-01-10
+HK-0100,Joan Garcia,48,male,Ayala,ironing|elder care,3,chavacano|filipino,weekly,2223,2026-03-16:2026-03-18|2026-05-08:2026-05-10|2026-01-20:2026-01-24|2026-04-25:2026-04-26
+HK-0101,Mae Garcia,37,female,Guiwan,cooking|elder care|baby care|pet care,4,english,weekly,3082,2026-01-19:2026-01-22|2026-05-03:2026-05-04
+HK-0102,Jessa Flores,55,female,Guiwan,deep cleaning|cleaning|house organization|gardening,5,chavacano|english,weekly,3331,2026-02-09:2026-02-13|2025-12-25:2025-12-29
+HK-0103,Nina Torres,37,male,Putik,baby care|gardening|laundry|elder care|cleaning,0,english|filipino,daily,457,2026-03-15:2026-03-17
+HK-0104,Aira Flores,40,male,Guiwan,house organization|deep cleaning|laundry|ironing,4,english|filipino,daily,600,2026-01-23:2026-01-24
+HK-0105,Mae Gonzales,42,male,Putik,elder care|deep cleaning|cooking,4,chavacano|filipino,weekly,4741,2026-04-24:2026-04-27|2026-04-24:2026-04-25|2026-01-10:2026-01-14
+HK-0106,Liza Torres,33,female,Divisoria,cleaning|baby care,4,bisaya|filipino,weekly,3372,2026-03-01:2026-03-02|2026-01-14:2026-01-18|2026-01-21:2026-01-24
+HK-0107,Mark Dela Cruz,43,male,Zamboanga City,cleaning|house organization|cooking|ironing|baby care,5,filipino,daily,614,2026-02-27:2026-02-28|2026-01-19:2026-01-20|2026-03-28:2026-03-31|2026-03-14:2026-03-17
+HK-0108,Ruth Flores,50,male,Sangali,cleaning|deep cleaning,2,english|filipino,daily,625,2026-04-13:2026-04-15|2026-04-28:2026-04-30|2026-03-11:2026-03-14|2026-01-28:2026-02-01
+HK-0109,Mark Villanueva,55,male,Sangali,deep cleaning|baby care|gardening|pet care|cleaning,1,chavacano|filipino,daily,526,2026-03-06:2026-03-07|2026-04-18:2026-04-21|2026-05-15:2026-05-17|2025-12-31:2026-01-04
+HK-0110,Liza Santos,27,female,Zamboanga City,cooking|cleaning,2,filipino,daily,558,2026-04-02:2026-04-06
+HK-0111,Riza Dela Cruz,26,female,Sangali,gardening|house organization|pet care|ironing,8,bisaya|filipino,weekly,1959,2026-05-06:2026-05-09|2026-02-23:2026-02-27
+HK-0112,Alex Torres,35,male,Putik,baby care|cooking|gardening|ironing,4,filipino,weekly,1987,2026-03-01:2026-03-02|2026-05-13:2026-05-17
+HK-0113,Jessa Dela Cruz,27,male,Zamboanga City,laundry|elder care|gardening|house organization,2,filipino,hourly,107,2026-02-25:2026-02-28|2026-01-22:2026-01-23|2026-02-17:2026-02-19|2025-12-30:2026-01-01
+HK-0114,Jessa Santos,21,female,Ayala,gardening|laundry|ironing|cleaning,3,bisaya,hourly,72,2026-04-18:2026-04-22|2026-02-07:2026-02-10|2026-03-10:2026-03-13
+HK-0115,Ruth Reyes,23,female,Sangali,ironing|pet care,2,chavacano|english,hourly,101,2026-04-23:2026-04-25|2026-03-02:2026-03-03|2025-12-20:2025-12-23
+HK-0116,Mark Villanueva,39,male,Sta. Maria,ironing|house organization|gardening|deep cleaning|laundry,2,chavacano|filipino,weekly,2909,2026-02-21:2026-02-23|2025-12-21:2025-12-24|2026-03-03:2026-03-05
+HK-0117,Nina Flores,45,male,Tetuan,laundry|ironing|house organization|cooking|gardening,3,bisaya|english,daily,485,2026-04-11:2026-04-14
+HK-0118,Riza Garcia,55,female,Canelar,cooking|cleaning|laundry|deep cleaning,7,filipino,weekly,3119,2026-01-17:2026-01-20|2026-03-22:2026-03-24
+HK-0119,Mae Torres,48,female,Sta. Maria,pet care|house organization|gardening|deep cleaning,0,chavacano|filipino,hourly,93,2026-01-07:2026-01-11
+HK-0120,Jessa Dela Cruz,22,female,Zamboanga City,deep cleaning|house organization|ironing,2,bisaya|english,daily,634,
+HK-0121,Liza Dela Cruz,55,male,Tetuan,cleaning|gardening|ironing|baby care|cooking,1,english|filipino,daily,538,2025-12-23:2025-12-27|2026-02-21:2026-02-22
+HK-0122,Jessa Garcia,55,female,Zamboanga City,elder care|laundry|cleaning|gardening|cooking,4,english|filipino,hourly,104,2026-03-23:2026-03-27|2026-04-11:2026-04-15|2026-03-24:2026-03-25
+HK-0123,Riza Reyes,40,female,Guiwan,house organization|ironing|cooking|pet care|cleaning,1,bisaya|chavacano,daily,516,2026-04-05:2026-04-09|2026-02-14:2026-02-16|2026-04-14:2026-04-17|2026-01-26:2026-01-29
+HK-0124,Riza Santos,20,male,Zamboanga City,cooking|laundry|house organization,2,chavacano|filipino,weekly,2470,
+HK-0125,Mark Dela Cruz,43,male,Putik,cleaning|ironing|baby care,7,bisaya|filipino,weekly,3004,2026-05-14:2026-05-17|2026-02-16:2026-02-19
+HK-0126,Nina Villanueva,44,male,Canelar,house organization|ironing,0,chavacano|filipino,daily,640,
+HK-0127,Mae Villanueva,51,male,Ayala,ironing|baby care|pet care|laundry|house organization,7,chavacano|filipino,daily,652,2026-04-15:2026-04-16
+HK-0128,Mae Dela Cruz,44,female,Ayala,baby care|cooking|elder care,0,bisaya|chavacano,daily,502,
+HK-0129,Liza Reyes,21,male,Ayala,laundry|cooking,6,chavacano|filipino,weekly,2443,2026-02-11:2026-02-15|2026-02-09:2026-02-12|2026-03-05:2026-03-06|2026-02-10:2026-02-12
+HK-0130,Carlo Reyes,48,female,Putik,cooking|house organization|elder care|pet care|ironing,4,filipino,daily,626,2026-02-22:2026-02-25|2026-04-28:2026-05-02
+HK-0131,Riza Torres,48,male,Putik,elder care|pet care|cleaning|baby care,1,chavacano,hourly,89,2026-05-08:2026-05-12|2026-03-03:2026-03-05
+HK-0132,Mark Santos,32,male,Putik,house organization|elder care|baby care|pet care|cooking,0,bisaya|chavacano,daily,448,2026-01-30:2026-02-02|2026-01-30:2026-02-01|2026-05-06:2026-05-10
+HK-0133,Mae Gonzales,51,female,Tetuan,cleaning|pet care,2,chavacano|english,hourly,69,2025-12-20:2025-12-22
+HK-0134,Mae Villanueva,41,female,Sta. Maria,cleaning|deep cleaning|pet care|house organization|gardening,6,filipino,daily,408,
+HK-0135,Nina Villanueva,29,female,Tetuan,cooking|deep cleaning|baby care,2,chavacano|filipino,daily,562,
+HK-0136,Liza Garcia,47,female,Putik,laundry|cleaning|deep cleaning|cooking,6,filipino,hourly,66,
+HK-0137,Mark Torres,23,male,Ayala,deep cleaning|laundry|cleaning|house organization,5,bisaya|filipino,weekly,2805,2026-02-25:2026-02-26|2026-01-06:2026-01-09|2026-05-06:2026-05-07
+HK-0138,Alex Dela Cruz,19,female,Guiwan,laundry|baby care|ironing|house organization|deep cleaning,1,chavacano,weekly,3032,2026-03-12:2026-03-16|2026-01-22:2026-01-23|2026-04-25:2026-04-28|2025-12-31:2026-01-01
+HK-0139,Joan Flores,22,male,Ayala,cleaning|baby care|gardening|cooking,3,filipino,daily,490,2026-02-03:2026-02-07|2026-01-08:2026-01-11|2026-02-19:2026-02-20
+HK-0140,Mark Reyes,27,male,Guiwan,elder care|deep cleaning|laundry|cleaning|pet care,3,bisaya|filipino,daily,511,
+HK-0141,Ruth Garcia,29,male,Sta. Maria,laundry|cleaning|deep cleaning|ironing|baby care,3,english|filipino,daily,615,2025-12-21:2025-12-24|2026-04-02:2026-04-06|2026-01-08:2026-01-10
+HK-0142,Riza Gonzales,42,female,Guiwan,baby care|deep cleaning|gardening|laundry,6,english|filipino,daily,427,2026-04-20:2026-04-21|2026-03-20:2026-03-23
+HK-0143,Carlo Torres,30,male,Tetuan,baby care|cleaning|pet care,7,chavacano|filipino,daily,385,2026-03-13:2026-03-17|2026-01-21:2026-01-24|2026-03-10:2026-03-12
+HK-0144,Ruth Dela Cruz,29,male,Divisoria,gardening|cooking|elder care|house organization,3,chavacano|filipino,daily,608,
+HK-0145,Alex Gonzales,55,female,Sangali,gardening|cooking,4,filipino,weekly,2486,
+HK-0146,Joan Dela Cruz,26,male,Putik,ironing|pet care|house organization|cleaning,3,filipino,weekly,2551,2026-05-03:2026-05-07|2026-05-06:2026-05-07|2026-03-20:2026-03-21
+HK-0147,Nina Santos,40,female,Zamboanga City,elder care|pet care|laundry|cleaning|house organization,2,filipino,weekly,3228,2026-05-15:2026-05-17|2026-04-11:2026-04-14|2026-03-28:2026-04-01|2026-04-25:2026-04-27
+HK-0148,Joan Flores,48,female,Canelar,laundry|deep cleaning|ironing|gardening|pet care,4,chavacano|filipino,weekly,2450,2026-03-17:2026-03-21|2026-01-11:2026-01-15|2026-04-12:2026-04-15
+HK-0149,Alex Santos,20,female,Zamboanga City,laundry|ironing|cooking|baby care,5,english,weekly,2954,2026-04-15:2026-04-17|2026-03-31:2026-04-02|2026-02-03:2026-02-07
+HK-0150,Mae Torres,30,male,Ayala,cleaning|cooking|house organization|ironing|elder care,5,chavacano|english,hourly,100,2026-02-03:2026-02-06|2026-03-11:2026-03-13|2026-04-14:2026-04-15|2026-02-23:2026-02-27
+HK-0151,Nina Garcia,42,male,Tetuan,elder care|gardening|ironing|pet care,1,chavacano,weekly,2517,2026-01-08:2026-01-10|2026-03-08:2026-03-09|2026-02-17:2026-02-20|2026-01-16:2026-01-18
+HK-0152,Carlo Flores,50,male,Ayala,deep cleaning|pet care|house organization,4,chavacano|english,weekly,3107,2026-05-09:2026-05-11
+HK-0153,Ruth Santos,26,female,Divisoria,deep cleaning|cleaning|elder care|house organization|cooking,3,chavacano|english,weekly,2859,2026-04-23:2026-04-27|2026-04-22:2026-04-26|2026-04-10:2026-04-14|2026-01-29:2026-01-30
+HK-0154,Liza Gonzales,32,male,Zamboanga City,cooking|house organization|baby care|laundry,6,chavacano|filipino,daily,491,2026-04-27:2026-04-28|2026-05-13:2026-05-14|2026-02-24:2026-02-27|2026-05-05:2026-05-06
+HK-0155,Riza Torres,52,female,Ayala,cooking|baby care,4,chavacano|english,daily,529,2026-01-09:2026-01-13|2026-01-17:2026-01-19
+HK-0156,Mae Reyes,45,female,Guiwan,cooking|cleaning|elder care,3,filipino,hourly,107,2026-03-02:2026-03-05|2026-05-13:2026-05-16
+HK-0157,Carlo Reyes,26,male,Zamboanga City,ironing|deep cleaning|cooking|laundry,5,chavacano,weekly,3210,2026-04-22:2026-04-24|2026-05-14:2026-05-17|2026-04-03:2026-04-07
+HK-0158,Liza Gonzales,23,male,Sangali,elder care|gardening|house organization|ironing,6,bisaya|chavacano,weekly,2810,
+HK-0159,Joan Garcia,40,female,Sangali,cooking|pet care|deep cleaning|gardening|ironing,4,filipino,weekly,2643,2026-01-20:2026-01-24|2026-03-15:2026-03-16|2025-12-29:2025-12-30|2026-04-14:2026-04-15
+HK-0160,Liza Dela Cruz,46,male,Zamboanga City,cooking|ironing|baby care|laundry|house organization,4,english|filipino,hourly,87,2026-01-29:2026-01-30|2026-03-29:2026-04-01
+HK-0161,Carlo Reyes,45,female,Tetuan,cooking|gardening,3,english|filipino,weekly,3099,2025-12-20:2025-12-21|2026-03-15:2026-03-16|2026-04-05:2026-04-07
+HK-0162,Mae Santos,32,male,Tetuan,laundry|elder care,1,filipino,daily,757,2026-01-23:2026-01-24
+HK-0163,Nina Villanueva,28,male,Divisoria,ironing|pet care|gardening,1,chavacano|english,hourly,70,2026-01-18:2026-01-22
+HK-0164,Jessa Santos,38,female,Putik,laundry|cooking|baby care|pet care,5,bisaya|english,weekly,3198,2026-02-08:2026-02-10|2026-03-28:2026-03-31
+HK-0165,Nina Garcia,33,male,Ayala,cooking|gardening,4,chavacano|english,hourly,100,2026-03-09:2026-03-11|2026-03-27:2026-03-31
+HK-0166,Kyla Reyes,48,female,Zamboanga City,cleaning|baby care,3,bisaya|filipino,daily,461,2026-03-01:2026-03-05|2026-04-05:2026-04-09|2026-01-08:2026-01-10|2026-02-27:2026-02-28
+HK-0167,Riza Reyes,50,female,Guiwan,pet care|laundry|baby care|elder care,3,bisaya|filipino,hourly,79,
+HK-0168,Mark Gonzales,45,female,Sta. Maria,baby care|ironing,5,chavacano|english,weekly,2725,
+HK-0169,Carlo Gonzales,40,male,Guiwan,ironing|baby care|laundry|pet care,1,chavacano|filipino,daily,518,2026-05-01:2026-05-02|2026-02-23:2026-02-24
+HK-0170,Riza Santos,50,male,Zamboanga City,deep cleaning|ironing|elder care|laundry|house organization,4,bisaya|chavacano,weekly,2515,
+HK-0171,Ruth Torres,20,female,Putik,gardening|elder care,1,english|filipino,hourly,93,2026-04-04:2026-04-06|2026-03-10:2026-03-12|2026-04-03:2026-04-06|2026-02-25:2026-02-26
+HK-0172,Aira Torres,25,female,Guiwan,house organization|cleaning|pet care,3,english|filipino,daily,499,2026-03-11:2026-03-12|2026-05-08:2026-05-12
+HK-0173,Jessa Santos,30,male,Canelar,gardening|elder care|deep cleaning,2,bisaya|chavacano,weekly,2916,2026-02-18:2026-02-20|2025-12-19:2025-12-23|2025-12-24:2025-12-26|2026-05-05:2026-05-08
+HK-0174,Liza Torres,39,female,Ayala,laundry|cooking|house organization|gardening,0,english|filipino,hourly,67,2026-01-10:2026-01-11|2026-02-15:2026-02-19
+HK-0175,Nina Gonzales,47,female,Tetuan,pet care|laundry|cleaning,2,bisaya|filipino,hourly,86,2026-02-22:2026-02-25|2026-03-28:2026-03-31
+HK-0176,Kyla Reyes,35,female,Tetuan,ironing|laundry|deep cleaning,4,english|filipino,daily,696,2026-01-17:2026-01-20|2026-02-09:2026-02-13|2026-03-06:2026-03-10
+HK-0177,Alex Gonzales,23,female,Canelar,cooking|elder care,5,chavacano|english,daily,534,2026-04-28:2026-04-29|2026-03-04:2026-03-07|2026-01-31:2026-02-01
+HK-0178,Jessa Reyes,53,female,Tetuan,laundry|ironing|deep cleaning|cleaning|pet care,3,bisaya|chavacano,hourly,73,2026-03-30:2026-04-02
+HK-0179,Nina Reyes,55,male,Tetuan,laundry|cooking,3,bisaya|filipino,hourly,85,
+HK-0180,Mark Flores,20,male,Zamboanga City,deep cleaning|pet care|house organization,4,filipino,daily,468,2026-03-18:2026-03-20
+HK-0181,Riza Dela Cruz,35,male,Guiwan,deep cleaning|cooking,4,chavacano|filipino,weekly,3572,2026-01-02:2026-01-03|2026-02-27:2026-03-03|2026-01-22:2026-01-26
+HK-0182,Aira Flores,52,female,Ayala,gardening|house organization|deep cleaning|ironing,3,bisaya|filipino,daily,589,2026-02-02:2026-02-03|2026-03-09:2026-03-11
+HK-0183,Riza Villanueva,21,male,Sangali,deep cleaning|cooking|ironing|cleaning,4,english|filipino,weekly,2597,
+HK-0184,Carlo Flores,40,female,Guiwan,deep cleaning|elder care|house organization,3,bisaya|english,weekly,2806,2026-05-12:2026-05-14|2026-05-11:2026-05-13
+HK-0185,Nina Dela Cruz,29,male,Zamboanga City,cleaning|cooking,3,chavacano|english,daily,473,
+HK-0186,Mark Garcia,26,male,Guiwan,cleaning|deep cleaning|ironing|baby care,3,chavacano|english,hourly,98,2026-03-21:2026-03-22|2026-03-23:2026-03-27|2026-01-12:2026-01-15|2026-03-05:2026-03-08
+HK-0187,Liza Villanueva,45,male,Divisoria,house organization|elder care|cooking,6,chavacano,daily,644,2026-03-03:2026-03-05|2026-02-01:2026-02-02
+HK-0188,Carlo Santos,54,female,Guiwan,deep cleaning|cooking|laundry|house organization,7,chavacano|english,hourly,77,2026-03-09:2026-03-11|2026-01-09:2026-01-12
+HK-0189,Nina Villanueva,34,female,Putik,elder care|baby care,5,chavacano,hourly,92,2026-04-09:2026-04-13|2026-01-29:2026-02-02|2026-04-23:2026-04-27
+HK-0190,Nina Garcia,24,male,Putik,gardening|laundry|cleaning,7,filipino,hourly,76,
+HK-0191,Aira Reyes,42,female,Tetuan,elder care|gardening,1,chavacano|filipino,weekly,2497,2026-04-08:2026-04-10
+HK-0192,Kyla Gonzales,39,female,Putik,house organization|deep cleaning|baby care|elder care|ironing,0,english|filipino,daily,497,2026-05-07:2026-05-11|2026-01-26:2026-01-27|2026-03-20:2026-03-21|2026-04-06:2026-04-07
+HK-0193,Alex Torres,30,female,Zamboanga City,ironing|baby care|laundry,1,english|filipino,daily,564,2026-04-22:2026-04-25|2026-01-10:2026-01-14|2026-02-03:2026-02-06
+HK-0194,Joan Torres,29,male,Zamboanga City,gardening|deep cleaning|baby care|laundry,4,chavacano|filipino,hourly,120,
+HK-0195,Joan Gonzales,52,male,Putik,pet care|house organization,5,filipino,daily,492,2026-02-16:2026-02-20|2026-03-04:2026-03-05|2026-03-29:2026-03-30|2026-04-25:2026-04-27
+HK-0196,Liza Reyes,29,female,Putik,ironing|cleaning|pet care,1,chavacano|english,hourly,97,2026-02-22:2026-02-25
+HK-0197,Joan Reyes,23,male,Sangali,house organization|elder care|baby care|gardening|cooking,0,bisaya|english,weekly,3723,2026-04-30:2026-05-04|2026-01-15:2026-01-19|2026-01-25:2026-01-27|2026-05-12:2026-05-13
+HK-0198,Nina Santos,36,male,Ayala,pet care|gardening|house organization|cleaning,5,english|filipino,weekly,2563,2026-03-30:2026-03-31|2026-03-29:2026-04-01|2026-02-16:2026-02-17|2026-04-18:2026-04-21
+HK-0199,Riza Villanueva,39,male,Canelar,gardening|laundry|cooking|house organization,0,chavacano|filipino,daily,684,2026-04-03:2026-04-04|2026-02-04:2026-02-08
+HK-0200,Mark Dela Cruz,49,male,Zamboanga City,laundry|baby care|pet care,3,bisaya|english,weekly,3423,
+HK-0201,Riza Torres,30,female,Putik,gardening|cleaning,0,bisaya|chavacano,daily,490,2026-04-15:2026-04-19|2026-01-18:2026-01-19
+HK-0202,Kyla Santos,49,male,Guiwan,deep cleaning|house organization|elder care|ironing|laundry,3,chavacano|filipino,weekly,2823,
+HK-0203,Carlo Garcia,42,female,Guiwan,cooking|deep cleaning|house organization,2,filipino,hourly,100,
+HK-0204,Ruth Reyes,29,female,Putik,deep cleaning|baby care|house organization|cooking,1,bisaya|chavacano,daily,535,2026-02-11:2026-02-15|2026-03-05:2026-03-09
+HK-0205,Mae Dela Cruz,18,male,Sangali,baby care|laundry|gardening|cleaning,3,filipino,daily,600,2026-02-22:2026-02-25|2026-02-04:2026-02-06
+HK-0206,Ruth Dela Cruz,21,male,Divisoria,cleaning|gardening|baby care,4,filipino,daily,438,
+HK-0207,Liza Garcia,39,female,Sangali,elder care|house organization|baby care|pet care|laundry,0,bisaya|chavacano,hourly,110,2026-01-11:2026-01-15|2026-01-19:2026-01-22
+HK-0208,Jessa Reyes,39,female,Putik,cooking|baby care|pet care|gardening,4,chavacano|filipino,weekly,2422,2026-04-15:2026-04-16|2026-04-17:2026-04-18
+HK-0209,Alex Gonzales,48,female,Sangali,pet care|house organization,6,english|filipino,hourly,91,2026-02-07:2026-02-10
+HK-0210,Aira Gonzales,27,male,Guiwan,gardening|elder care,5,chavacano|english,weekly,2834,
+HK-0211,Liza Torres,35,female,Guiwan,gardening|laundry|ironing,7,chavacano,daily,723,2026-04-19:2026-04-23|2025-12-19:2025-12-20|2026-05-03:2026-05-05
+HK-0212,Mae Flores,18,male,Sangali,cleaning|deep cleaning|cooking,3,bisaya|filipino,daily,646,2026-01-13:2026-01-17
+HK-0213,Riza Garcia,28,female,Zamboanga City,baby care|gardening|elder care|cooking,4,bisaya|chavacano,daily,685,2026-03-19:2026-03-21|2026-01-29:2026-02-02|2025-12-22:2025-12-24
+HK-0214,Alex Reyes,31,female,Sangali,laundry|elder care|cleaning,1,chavacano|filipino,weekly,3145,2025-12-30:2025-12-31|2026-01-14:2026-01-15|2025-12-30:2025-12-31|2026-04-03:2026-04-07
+HK-0215,Kyla Reyes,53,male,Sta. Maria,cooking|cleaning|baby care,5,english|filipino,weekly,1959,2026-01-22:2026-01-26|2026-01-13:2026-01-14
+HK-0216,Mae Gonzales,24,male,Putik,baby care|house organization|cooking,1,filipino,hourly,62,
+HK-0217,Jessa Dela Cruz,31,male,Divisoria,cleaning|deep cleaning|laundry,2,bisaya|chavacano,weekly,3161,2026-01-25:2026-01-26|2026-04-27:2026-04-28|2026-01-12:2026-01-15
+HK-0218,Aira Garcia,47,male,Canelar,cleaning|laundry|ironing|pet care|deep cleaning,6,chavacano|filipino,weekly,2837,2026-04-06:2026-04-07|2026-01-11:2026-01-12
+HK-0219,Joan Garcia,28,male,Divisoria,deep cleaning|baby care|laundry|ironing|pet care,6,english|filipino,daily,413,2026-03-26:2026-03-30|2026-04-04:2026-04-06
+HK-0220,Joan Villanueva,21,female,Tetuan,deep cleaning|gardening|house organization|laundry|baby care,0,filipino,hourly,89,2026-04-20:2026-04-24
+HK-0221,Aira Garcia,46,female,Tetuan,elder care|cleaning|cooking|deep cleaning,4,chavacano|filipino,weekly,2783,2026-01-11:2026-01-15|2026-02-19:2026-02-23|2026-03-16:2026-03-20|2026-01-25:2026-01-26
+HK-0222,Joan Gonzales,50,male,Sta. Maria,laundry|gardening|elder care,0,bisaya|filipino,hourly,88,2026-02-13:2026-02-17|2026-03-31:2026-04-02|2026-01-07:2026-01-11|2026-04-10:2026-04-14
+HK-0223,Nina Gonzales,46,male,Tetuan,cleaning|laundry|pet care|cooking|deep cleaning,0,chavacano|english,hourly,100,2026-03-05:2026-03-07|2026-04-13:2026-04-16|2026-03-21:2026-03-22|2026-02-13:2026-02-17
+HK-0224,Joan Flores,41,male,Tetuan,cooking|cleaning,4,chavacano|filipino,daily,456,2026-04-30:2026-05-03|2026-01-14:2026-01-15|2026-01-29:2026-02-02|2026-01-22:2026-01-26
+HK-0225,Mae Villanueva,30,female,Tetuan,cooking|gardening|deep cleaning|elder care|ironing,2,english|filipino,weekly,2266,2026-01-18:2026-01-22|2026-04-14:2026-04-16|2026-04-24:2026-04-25|2026-05-02:2026-05-03
+HK-0226,Kyla Villanueva,55,male,Sangali,deep cleaning|ironing|house organization,3,chavacano|english,weekly,3281,2026-04-26:2026-04-30|2026-04-04:2026-04-06
+HK-0227,Liza Reyes,39,male,Sta. Maria,ironing|pet care|baby care,1,chavacano|filipino,daily,599,2026-02-11:2026-02-13|2026-02-09:2026-02-12|2026-03-16:2026-03-18|2026-02-01:2026-02-04
+HK-0228,Kyla Flores,40,male,Ayala,pet care|cleaning|laundry|house organization,2,english|filipino,hourly,77,2026-02-24:2026-02-26
+HK-0229,Jessa Torres,27,female,Canelar,house organization|cleaning|elder care,3,chavacano|english,weekly,2278,2026-02-13:2026-02-17|2026-02-16:2026-02-19|2025-12-30:2026-01-03|2026-03-27:2026-03-31
+HK-0230,Liza Reyes,53,female,Zamboanga City,cooking|gardening|deep cleaning|elder care,2,chavacano,weekly,2196,2026-02-06:2026-02-08|2026-03-03:2026-03-07|2026-02-01:2026-02-02|2026-02-03:2026-02-05
+HK-0231,Carlo Torres,42,female,Ayala,house organization|baby care|ironing|laundry,7,chavacano|filipino,daily,553,2026-01-26:2026-01-27|2026-01-26:2026-01-29|2025-12-31:2026-01-03
+HK-0232,Kyla Dela Cruz,22,male,Sangali,ironing|house organization|laundry,2,chavacano|english,weekly,2907,2026-03-31:2026-04-01|2026-03-17:2026-03-19|2026-02-10:2026-02-13|2026-03-12:2026-03-15
+HK-0233,Aira Torres,51,male,Sangali,laundry|elder care,3,bisaya|filipino,weekly,2688,2026-02-18:2026-02-19|2026-03-10:2026-03-14|2026-01-16:2026-01-20|2026-02-21:2026-02-24
+HK-0234,Jessa Reyes,50,male,Sta. Maria,baby care|cooking,4,english|filipino,hourly,102,2026-05-04:2026-05-05
+HK-0235,Joan Reyes,31,female,Ayala,cooking|house organization,2,bisaya|chavacano,weekly,2509,2026-01-05:2026-01-07|2025-12-24:2025-12-28|2026-03-12:2026-03-13
+HK-0236,Jessa Reyes,21,female,Canelar,deep cleaning|cooking,2,bisaya|filipino,daily,385,2026-04-07:2026-04-10|2025-12-22:2025-12-26|2026-01-17:2026-01-18
+HK-0237,Mark Villanueva,55,female,Tetuan,house organization|laundry|baby care|pet care,0,chavacano,daily,685,2026-03-25:2026-03-29|2025-12-25:2025-12-29|2026-01-27:2026-01-29
+HK-0238,Mark Garcia,52,male,Guiwan,elder care|cleaning|ironing|house organization,6,english|filipino,daily,525,2026-05-07:2026-05-08|2026-03-06:2026-03-08|2026-03-16:2026-03-18|2026-04-02:2026-04-04
+HK-0239,Riza Gonzales,32,male,Putik,ironing|cleaning,4,bisaya|chavacano,weekly,2956,2026-05-07:2026-05-08|2026-03-02:2026-03-03|2026-02-20:2026-02-21
+HK-0240,Nina Villanueva,39,male,Guiwan,laundry|baby care|deep cleaning,9,bisaya|filipino,daily,660,2026-03-06:2026-03-08|2026-05-11:2026-05-14
+HK-0241,Kyla Gonzales,28,female,Divisoria,cooking|pet care|baby care,3,chavacano|english,weekly,2318,2026-04-19:2026-04-23|2026-04-11:2026-04-14
+HK-0242,Liza Reyes,53,female,Guiwan,baby care|ironing,0,chavacano|english,weekly,2902,
+HK-0243,Riza Flores,19,female,Ayala,cleaning|house organization|baby care,1,bisaya|filipino,daily,409,2026-03-21:2026-03-25
+HK-0244,Carlo Garcia,26,male,Sangali,pet care|elder care,2,chavacano|filipino,weekly,2254,2026-04-28:2026-04-30
+HK-0245,Alex Gonzales,29,female,Sta. Maria,cleaning|cooking|gardening|laundry,6,english|filipino,hourly,104,2026-04-29:2026-05-02
+HK-0246,Nina Reyes,47,female,Zamboanga City,laundry|house organization|baby care|pet care,3,chavacano|filipino,weekly,3545,2026-03-24:2026-03-28
+HK-0247,Riza Garcia,51,male,Ayala,house organization|pet care|elder care,3,chavacano|filipino,daily,464,2025-12-19:2025-12-21|2026-04-09:2026-04-11|2026-02-14:2026-02-15|2026-04-28:2026-05-01
+HK-0248,Aira Garcia,29,female,Divisoria,cooking|pet care,6,chavacano,daily,603,2026-04-19:2026-04-21|2026-01-28:2026-02-01|2025-12-23:2025-12-25
+HK-0249,Mark Dela Cruz,54,female,Guiwan,deep cleaning|ironing,1,english|filipino,hourly,86,2026-03-31:2026-04-01|2026-02-28:2026-03-01|2026-02-11:2026-02-15|2026-04-17:2026-04-21
+HK-0250,Riza Villanueva,44,female,Guiwan,ironing|elder care|gardening|baby care,1,chavacano|english,daily,413,2026-01-14:2026-01-15
+HK-0251,Jessa Villanueva,27,female,Guiwan,deep cleaning|cleaning|laundry|house organization|cooking,5,bisaya|chavacano,weekly,3762,
+HK-0252,Kyla Gonzales,51,male,Divisoria,house organization|pet care,0,chavacano|filipino,daily,605,2026-05-14:2026-05-15|2026-04-05:2026-04-07
+HK-0253,Alex Flores,32,female,Canelar,baby care|cooking|cleaning|elder care|pet care,2,chavacano|filipino,hourly,82,2025-12-19:2025-12-23|2026-02-08:2026-02-11|2026-04-01:2026-04-04|2026-01-14:2026-01-16
+HK-0254,Jessa Reyes,34,male,Divisoria,pet care|cooking|deep cleaning|baby care,2,chavacano|filipino,daily,464,2026-05-09:2026-05-13|2026-02-20:2026-02-23|2026-05-14:2026-05-17|2026-03-29:2026-03-31
+HK-0255,Joan Reyes,32,male,Guiwan,cooking|house organization,3,filipino,weekly,2381,2025-12-31:2026-01-02|2026-03-27:2026-03-28|2026-01-10:2026-01-12|2026-04-17:2026-04-21
+HK-0256,Jessa Flores,34,female,Divisoria,deep cleaning|cleaning,4,bisaya|chavacano,daily,545,2026-04-30:2026-05-03|2026-01-01:2026-01-03|2026-04-23:2026-04-27|2025-12-20:2025-12-22
+HK-0257,Kyla Villanueva,30,female,Sangali,deep cleaning|ironing|cleaning,3,chavacano|filipino,hourly,75,
+HK-0258,Ruth Santos,40,male,Ayala,house organization|cleaning|laundry,2,bisaya|filipino,weekly,3180,2026-05-16:2026-05-19|2026-03-16:2026-03-19|2026-02-13:2026-02-15|2026-04-13:2026-04-17
+HK-0259,Carlo Gonzales,34,female,Ayala,house organization|laundry,4,filipino,hourly,74,2026-02-21:2026-02-24|2026-04-10:2026-04-14|2026-05-11:2026-05-15|2026-02-18:2026-02-21
+HK-0260,Nina Santos,55,female,Sta. Maria,baby care|laundry,3,chavacano|filipino,hourly,102,2026-03-08:2026-03-12
+HK-0261,Mark Dela Cruz,34,female,Canelar,pet care|elder care,0,bisaya|english,daily,603,2026-03-18:2026-03-20|2026-05-13:2026-05-16
+HK-0262,Jessa Gonzales,49,female,Putik,baby care|cooking|house organization,2,english|filipino,weekly,3087,2026-01-26:2026-01-27|2026-01-17:2026-01-18
+HK-0263,Aira Villanueva,18,female,Sta. Maria,deep cleaning|elder care|gardening|baby care,1,chavacano|filipino,weekly,1959,2026-03-29:2026-03-31|2026-05-14:2026-05-16
+HK-0264,Aira Dela Cruz,48,female,Sangali,pet care|ironing|gardening|cleaning,0,chavacano|filipino,weekly,2824,
+HK-0265,Riza Villanueva,42,female,Divisoria,deep cleaning|baby care|ironing|house organization,4,filipino,weekly,2344,2026-03-21:2026-03-23|2026-04-24:2026-04-28
+HK-0266,Mark Garcia,41,male,Ayala,gardening|ironing|house organization|baby care,4,chavacano,weekly,1962,2026-02-16:2026-02-20|2026-03-25:2026-03-27
+HK-0267,Alex Reyes,48,female,Guiwan,gardening|ironing|elder care|pet care|cooking,3,filipino,weekly,2189,
+HK-0268,Kyla Torres,28,female,Putik,gardening|laundry|deep cleaning|elder care,2,filipino,weekly,2823,2026-02-21:2026-02-24|2025-12-23:2025-12-27|2026-01-18:2026-01-21|2026-02-06:2026-02-08
+HK-0269,Mark Torres,38,male,Sta. Maria,pet care|baby care,1,bisaya|filipino,hourly,83,2026-04-04:2026-04-08|2026-01-05:2026-01-06
+HK-0270,Jessa Flores,32,male,Divisoria,baby care|pet care|deep cleaning|cooking,5,bisaya|chavacano,weekly,2509,2026-04-30:2026-05-04|2026-04-02:2026-04-04|2026-02-03:2026-02-04|2026-01-19:2026-01-21
+HK-0271,Joan Flores,23,female,Guiwan,laundry|deep cleaning|house organization|cooking|baby care,5,chavacano|english,weekly,2230,
+HK-0272,Aira Torres,27,female,Ayala,cooking|deep cleaning|baby care|house organization,4,chavacano|english,hourly,113,
+HK-0273,Kyla Torres,38,male,Sta. Maria,house organization|gardening|ironing|elder care,0,filipino,daily,471,2026-04-08:2026-04-11|2026-03-16:2026-03-20|2026-05-05:2026-05-07|2026-01-09:2026-01-13
+HK-0274,Aira Torres,44,male,Guiwan,cleaning|deep cleaning|ironing|gardening,4,filipino,weekly,2697,2026-04-19:2026-04-22|2025-12-20:2025-12-24|2026-03-02:2026-03-04
+HK-0275,Kyla Flores,30,male,Sangali,pet care|cooking|ironing|elder care|deep cleaning,4,chavacano,hourly,80,2026-01-07:2026-01-11|2026-02-17:2026-02-20
+HK-0276,Mark Reyes,44,female,Tetuan,ironing|baby care|laundry,3,chavacano,daily,534,2026-04-22:2026-04-24|2026-03-10:2026-03-11|2026-01-25:2026-01-26|2026-05-03:2026-05-04
+HK-0277,Aira Flores,36,male,Guiwan,cleaning|cooking|laundry|gardening|deep cleaning,5,filipino,daily,575,2026-03-23:2026-03-27|2025-12-26:2025-12-29|2026-01-07:2026-01-09
+HK-0278,Riza Santos,43,female,Sangali,ironing|cooking|baby care|pet care|house organization,4,chavacano|english,weekly,2592,2026-03-26:2026-03-30
+HK-0279,Liza Reyes,30,male,Tetuan,gardening|pet care|baby care,2,bisaya|english,weekly,2581,
+HK-0280,Alex Dela Cruz,34,male,Canelar,elder care|cleaning|cooking,4,bisaya|english,daily,508,2025-12-21:2025-12-23|2026-02-26:2026-02-27
+HK-0281,Liza Reyes,18,female,Sta. Maria,elder care|laundry|cooking,4,english,weekly,3846,2026-01-02:2026-01-03|2026-03-19:2026-03-21
+HK-0282,Carlo Gonzales,26,male,Putik,house organization|elder care|gardening|deep cleaning,5,chavacano|english,daily,517,2026-02-20:2026-02-21
+HK-0283,Carlo Santos,53,male,Sangali,cooking|ironing|elder care|house organization|gardening,5,bisaya|filipino,weekly,2594,2026-01-28:2026-01-29|2026-05-02:2026-05-04|2026-04-12:2026-04-15|2026-02-23:2026-02-26
+HK-0284,Jessa Villanueva,50,male,Guiwan,deep cleaning|elder care,0,chavacano|english,weekly,2291,
+HK-0285,Riza Reyes,30,male,Sangali,deep cleaning|baby care|elder care,0,filipino,hourly,84,2026-01-04:2026-01-05|2026-01-20:2026-01-22|2025-12-26:2025-12-28|2026-01-14:2026-01-18
+HK-0286,Nina Santos,20,male,Sta. Maria,cleaning|elder care|cooking|baby care,3,chavacano|english,hourly,117,2026-01-07:2026-01-11|2026-01-02:2026-01-05|2026-05-09:2026-05-13
+HK-0287,Ruth Garcia,35,female,Tetuan,laundry|cooking|deep cleaning|cleaning,4,chavacano|filipino,hourly,86,2026-05-01:2026-05-03
+HK-0288,Mae Torres,53,male,Tetuan,gardening|pet care|laundry|deep cleaning,5,chavacano|filipino,weekly,1959,2026-01-27:2026-01-31|2026-03-18:2026-03-21
+HK-0289,Liza Santos,41,male,Ayala,deep cleaning|cooking|house organization|gardening,3,bisaya|chavacano,daily,626,2026-04-12:2026-04-16|2026-03-29:2026-03-30
+HK-0290,Liza Flores,36,female,Sangali,baby care|cleaning|deep cleaning,0,bisaya|english,daily,663,
+HK-0291,Kyla Reyes,53,female,Tetuan,gardening|elder care,4,english|filipino,weekly,2590,2026-02-15:2026-02-18
+HK-0292,Alex Villanueva,54,male,Putik,elder care|gardening,4,chavacano|english,weekly,3944,2026-01-11:2026-01-14|2025-12-27:2025-12-31|2026-01-07:2026-01-08|2026-03-13:2026-03-16
+HK-0293,Jessa Villanueva,25,female,Zamboanga City,cleaning|baby care|deep cleaning|ironing|house organization,3,chavacano|filipino,weekly,2925,2026-01-26:2026-01-27
+HK-0294,Carlo Dela Cruz,46,female,Putik,baby care|pet care|ironing|laundry|gardening,2,english|filipino,hourly,76,2026-03-30:2026-04-02|2026-01-08:2026-01-12|2026-04-25:2026-04-29|2026-01-20:2026-01-22
+HK-0295,Joan Villanueva,49,male,Putik,cooking|laundry|baby care,5,chavacano|filipino,weekly,2368,
+HK-0296,Liza Reyes,45,male,Divisoria,elder care|deep cleaning|cleaning,3,chavacano|english,daily,502,2026-04-10:2026-04-12|2026-04-09:2026-04-10|2026-02-15:2026-02-17|2026-03-23:2026-03-25
+HK-0297,Mae Gonzales,25,female,Putik,baby care|cleaning|elder care,4,chavacano|english,daily,583,2025-12-23:2025-12-26|2026-02-09:2026-02-11|2026-02-08:2026-02-11
+HK-0298,Joan Santos,27,female,Ayala,baby care|ironing,5,english,weekly,2542,2026-02-25:2026-02-26|2026-04-16:2026-04-17|2026-01-04:2026-01-08|2026-02-25:2026-02-28
+HK-0299,Nina Gonzales,36,male,Putik,house organization|laundry|elder care|cooking|baby care,2,english|filipino,weekly,2306,2026-05-10:2026-05-11|2025-12-28:2025-12-30|2026-05-02:2026-05-05
+HK-0300,Jessa Flores,43,female,Zamboanga City,elder care|deep cleaning|baby care|laundry,2,bisaya,daily,587,
